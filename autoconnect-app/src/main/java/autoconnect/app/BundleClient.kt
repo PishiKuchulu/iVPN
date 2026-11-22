@@ -97,7 +97,35 @@ class BundleClient internal constructor(
         private const val PUBLIC_KEY_B64 = "3kz5mOnKQSno3Ip+cUzn1tncIVnmQzOL1uUfyFmXI+g="
         private const val BUNDLE_PATH = "/api/bundle"
 
+        private val FETCH_EXECUTOR = java.util.concurrent.Executors.newCachedThreadPool { r ->
+            Thread(r, "bundle-fetch").apply { isDaemon = true }
+        }
+
+        /** The socket timeouts in [httpGetOnce] do not bound DNS
+         *  resolution: on a network whose resolver is unreachable,
+         *  "Unable to resolve host" took ~95 s on-device (test #3,
+         *  2026-11-23) and stalled every cold start before the
+         *  cache/seed fallback could engage. Run the exchange on a
+         *  daemon thread under a hard 25 s deadline instead; a stuck
+         *  resolver thread is abandoned, never awaited. */
         private fun defaultHttpGet(url: String): String {
+            val future = FETCH_EXECUTOR.submit(java.util.concurrent.Callable { httpGetOnce(url) })
+            return try {
+                future.get(25, java.util.concurrent.TimeUnit.SECONDS)
+            } catch (e: java.util.concurrent.TimeoutException) {
+                future.cancel(true)
+                throw BundleTransportException("bundle fetch deadline exceeded (25s)")
+            } catch (e: java.util.concurrent.ExecutionException) {
+                val cause = e.cause
+                if (cause is BundleTransportException) throw cause
+                throw BundleTransportException("bundle fetch IO: ${cause?.message}", cause)
+            } catch (e: InterruptedException) {
+                Thread.currentThread().interrupt()
+                throw BundleTransportException("bundle fetch interrupted")
+            }
+        }
+
+        private fun httpGetOnce(url: String): String {
             val conn = URL(url).openConnection() as HttpURLConnection
             conn.connectTimeout = 10_000
             conn.readTimeout = 10_000

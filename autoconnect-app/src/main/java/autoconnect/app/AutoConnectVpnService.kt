@@ -104,9 +104,18 @@ class AutoConnectVpnService : VpnService() {
     private val underlyingNetworks = mutableSetOf<Network>()
     private var primaryUnderlying: Network? = null
 
+    /** Our own VPN network, once the system publishes it. The probe
+     *  binds to this network — the only way this process's traffic can
+     *  be forced through its own TUN. */
+    @Volatile
+    private var vpnNetwork: Network? = null
+
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
-            if (isVpnNetwork(network)) return // our own TUN coming up is not a change
+            if (isVpnNetwork(network)) {
+                vpnNetwork = network // our own TUN coming up is not an underlying change
+                return
+            }
             synchronized(underlyingNetworks) {
                 if (underlyingNetworks.isEmpty()) primaryUnderlying = network
                 underlyingNetworks.add(network)
@@ -114,7 +123,10 @@ class AutoConnectVpnService : VpnService() {
         }
 
         override fun onLost(network: Network) {
-            if (isVpnNetwork(network)) return
+            if (isVpnNetwork(network)) {
+                if (vpnNetwork == network) vpnNetwork = null
+                return
+            }
             val lostPrimary: Boolean
             val nowEmpty: Boolean
             synchronized(underlyingNetworks) {
@@ -354,7 +366,12 @@ class AutoConnectVpnService : VpnService() {
         } catch (e: Exception) {
             val handshakeMs = (System.currentTimeMillis() - startedAt).toInt()
             AppLog.log("vpn", "candidate $configId failed: ${e.message}")
-            reports.queue(configId, operator, "handshake", handshakeMs, "fail")
+            // A failure measured while teardown is already running is
+            // not evidence about this config — do not record it
+            // (test #3 queued a fail report 2 s after disconnect).
+            if (!stopRequested) {
+                reports.queue(configId, operator, "handshake", handshakeMs, "fail")
+            }
             null
         }
     }
@@ -387,6 +404,32 @@ class AutoConnectVpnService : VpnService() {
     /** Real traffic check through the established tunnel: the first
      *  endpoint that answers wins. */
     private fun probeThroughTunnel(): Boolean {
+        // The probe MUST be bound to our VPN network. A plain
+        // URL.openConnection() from this process bypasses our own TUN —
+        // Android exempts the VPN app's own traffic — so it measures
+        // the underlying network instead of the tunnel. That was the
+        // test-#3 bug (2026-11-23): on Wi-Fi every candidate was
+        // declared dead because the Wi-Fi's own DNS resolved none of
+        // the probe hosts, while no tunnel was ever actually tested;
+        // the test-#2 "connected" on MCI likewise only ever proved the
+        // direct path. Bound to the VPN network, DNS resolves through
+        // the TUN's DNS chain (hijack -> DoH via the candidate's
+        // outbound), so a dead candidate now fails for real.
+        var waited = 0L
+        while (vpnNetwork == null && !stopRequested && waited < 5_000) {
+            try {
+                Thread.sleep(100)
+            } catch (_: InterruptedException) {
+                return false
+            }
+            waited += 100
+        }
+        if (stopRequested) return false
+        val network = vpnNetwork
+        if (network == null) {
+            AppLog.log("vpn", "probe aborted: VPN network not published yet")
+            return false
+        }
         try {
             Thread.sleep(400)
         } catch (_: InterruptedException) {
@@ -396,7 +439,7 @@ class AutoConnectVpnService : VpnService() {
             if (stopRequested) return false // a stop mid-probe ends it now, not after ~20 s of timeouts
             var conn: HttpURLConnection? = null
             try {
-                conn = URL(url).openConnection() as HttpURLConnection
+                conn = network.openConnection(URL(url)) as HttpURLConnection
                 conn.connectTimeout = 7_000
                 conn.readTimeout = 7_000
                 val code = conn.responseCode

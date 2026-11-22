@@ -356,6 +356,25 @@ private fun r10StaleSeedServedFlagged() {
     check("R10: stale seed is flagged stale", served.stale)
 }
 
+// ----------------------- R11: probe binds to the VPN network (test #3)
+
+// The probe is Android-bound (android.net.Network) and cannot run on
+// the JVM; like R6, this gate is source-verified instead. Regression
+// being guarded: probeThroughTunnel once used a plain
+// URL.openConnection(), which bypasses the app's own TUN — on Wi-Fi
+// every candidate was declared dead by the Wi-Fi's own DNS while no
+// tunnel was ever tested (device test #3, 2026-11-23).
+private fun r11ProbeBindsVpnNetwork() {
+    val src = File("src/main/java/autoconnect/app/AutoConnectVpnService.kt").readText()
+    val start = src.indexOf("fun probeThroughTunnel")
+    check("R11: probeThroughTunnel exists", start >= 0)
+    if (start < 0) return
+    val body = src.substring(start, src.indexOf("\n    private fun", start + 10).takeIf { it > start } ?: src.length)
+    check("R11: probe waits for / uses the VPN network", body.contains("vpnNetwork"))
+    check("R11: probe opens connections on the VPN network", body.contains("network.openConnection"))
+    check("R11: probe never opens a plain (TUN-bypassing) connection", !body.contains("URL(url).openConnection()"))
+}
+
 // ---------------------------------------------------------------- main
 
 fun main() {
@@ -372,6 +391,7 @@ fun main() {
     r10StaleFetchRejectedFallsBackToCache()
     r10StaleCacheServedFlagged()
     r10StaleSeedServedFlagged()
+    r11ProbeBindsVpnNetwork()
 
     println("AppTests: $passed passed, $failed failed, ${passed + failed} total")
     if (failed > 0) {
