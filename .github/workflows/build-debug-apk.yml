@@ -12,7 +12,45 @@ on:
   workflow_dispatch:
 
 jobs:
+  # Test gate (AUD-006): the three JVM/parser suites must pass before any
+  # APK is built. The suites are self-locating since AUD-007 (env/PATH/
+  # relative resolution), so they run on a fresh checkout as-is.
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out this repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Kotlin compiler 2.0.21
+        run: |
+          curl -sL https://github.com/JetBrains/kotlin/releases/download/v2.0.21/kotlin-compiler-2.0.21.zip -o /tmp/kotlin-compiler.zip
+          unzip -q /tmp/kotlin-compiler.zip -d /opt
+          echo "/opt/kotlinc/bin" >> "$GITHUB_PATH"
+
+      - name: Install Android platform 35 (android.jar for the app test stubs)
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35"
+
+      - name: Adapter tests
+        run: bash autoconnect-core/adapter/run-tests.sh
+
+      - name: App tests + FA/EN string parity
+        run: bash autoconnect-app/run-app-tests.sh
+
+      - name: Parser tests
+        working-directory: autoconnect-core/parser
+        run: python3 -m unittest test_parser
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
