@@ -370,9 +370,13 @@ private fun r11ProbeBindsVpnNetwork() {
     check("R11: probeThroughTunnel exists", start >= 0)
     if (start < 0) return
     val body = src.substring(start, src.indexOf("\n    private fun", start + 10).takeIf { it > start } ?: src.length)
-    check("R11: probe waits for / uses the VPN network", body.contains("vpnNetwork"))
+    check("R11: probe resolves the VPN network on demand", body.contains("resolveVpnNetwork"))
     check("R11: probe opens connections on the VPN network", body.contains("network.openConnection"))
     check("R11: probe never opens a plain (TUN-bypassing) connection", !body.contains("URL(url).openConnection()"))
+    check(
+        "R11: an inconclusive probe queues no fail report (test #4)",
+        src.contains("e !is ProbeInconclusiveException"),
+    )
 }
 
 // ---------------------------------------------------------------- main

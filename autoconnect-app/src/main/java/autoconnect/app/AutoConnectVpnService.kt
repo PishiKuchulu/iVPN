@@ -355,7 +355,11 @@ class AutoConnectVpnService : VpnService() {
                 throw e
             }
             if (core.status() != CoreStatus.RUNNING) throw Exception("core not RUNNING after start")
-            if (!probeThroughTunnel()) throw Exception("connectivity probe through tunnel failed")
+            when (probeThroughTunnel()) {
+                ProbeResult.OK -> Unit
+                ProbeResult.FAILED -> throw Exception("connectivity probe through tunnel failed")
+                ProbeResult.INCONCLUSIVE -> throw ProbeInconclusiveException()
+            }
             val handshakeMs = (System.currentTimeMillis() - startedAt).toInt()
             AppLog.log("vpn", "CONNECTED via $configId in ${handshakeMs}ms op=$operator")
             reports.queue(configId, operator, "connected", handshakeMs, "success")
@@ -369,7 +373,10 @@ class AutoConnectVpnService : VpnService() {
             // A failure measured while teardown is already running is
             // not evidence about this config — do not record it
             // (test #3 queued a fail report 2 s after disconnect).
-            if (!stopRequested) {
+            // An inconclusive probe is not evidence either: in test #4
+            // twenty fail reports were queued against innocent configs
+            // because the probe itself could not run.
+            if (!stopRequested && e !is ProbeInconclusiveException) {
                 reports.queue(configId, operator, "handshake", handshakeMs, "fail")
             }
             null
@@ -390,20 +397,51 @@ class AutoConnectVpnService : VpnService() {
                 networkChanged = false
                 return MonitorOutcome.NETWORK_CHANGED
             }
-            if (probeThroughTunnel()) {
-                consecutiveFailures = 0
-            } else {
-                consecutiveFailures++
-                AppLog.log("vpn", "health probe failed ($consecutiveFailures/2)")
+            when (probeThroughTunnel()) {
+                ProbeResult.OK -> consecutiveFailures = 0
+                ProbeResult.FAILED -> {
+                    consecutiveFailures++
+                    AppLog.log("vpn", "health probe failed ($consecutiveFailures/2)")
+                }
+                // An inconclusive health probe judges nothing: the
+                // session is neither confirmed alive nor counted dead.
+                ProbeResult.INCONCLUSIVE ->
+                    AppLog.log("vpn", "health probe inconclusive — not counted")
             }
             if (consecutiveFailures >= 2) return MonitorOutcome.DIED
         }
         return MonitorOutcome.STOPPED
     }
 
+    /** Probe outcome. INCONCLUSIVE means the probe itself could not
+     *  run (no VPN network found) — it is not evidence about the
+     *  candidate and must never produce a fail report. */
+    private enum class ProbeResult { OK, FAILED, INCONCLUSIVE }
+
+    /** Thrown when a candidate attempt ends on an inconclusive probe. */
+    private class ProbeInconclusiveException :
+        Exception("probe inconclusive: VPN network not found")
+
+    /** Find our VPN network on demand by scanning the system's
+     *  networks for the VPN transport. The NetworkCallback route was
+     *  tried first (test #4, 2026-11-23): the callback is registered
+     *  with an INTERNET-capability request and never delivered our own
+     *  VPN network on-device — 20 of 20 probes aborted. The scan does
+     *  not depend on callback semantics; Android allows only one VPN
+     *  at a time, and while our TUN is up that network is ours. */
+    private fun resolveVpnNetwork(): Network? {
+        vpnNetwork?.let { return it }
+        val cm = connectivity ?: return null
+        return try {
+            cm.allNetworks.firstOrNull { isVpnNetwork(it) }?.also { vpnNetwork = it }
+        } catch (_: Exception) {
+            null
+        }
+    }
+
     /** Real traffic check through the established tunnel: the first
      *  endpoint that answers wins. */
-    private fun probeThroughTunnel(): Boolean {
+    private fun probeThroughTunnel(): ProbeResult {
         // The probe MUST be bound to our VPN network. A plain
         // URL.openConnection() from this process bypasses our own TUN —
         // Android exempts the VPN app's own traffic — so it measures
@@ -415,28 +453,29 @@ class AutoConnectVpnService : VpnService() {
         // direct path. Bound to the VPN network, DNS resolves through
         // the TUN's DNS chain (hijack -> DoH via the candidate's
         // outbound), so a dead candidate now fails for real.
+        var network = resolveVpnNetwork()
         var waited = 0L
-        while (vpnNetwork == null && !stopRequested && waited < 5_000) {
+        while (network == null && !stopRequested && waited < 5_000) {
             try {
-                Thread.sleep(100)
+                Thread.sleep(250)
             } catch (_: InterruptedException) {
-                return false
+                return ProbeResult.INCONCLUSIVE
             }
-            waited += 100
+            waited += 250
+            network = resolveVpnNetwork()
         }
-        if (stopRequested) return false
-        val network = vpnNetwork
+        if (stopRequested) return ProbeResult.INCONCLUSIVE
         if (network == null) {
-            AppLog.log("vpn", "probe aborted: VPN network not published yet")
-            return false
+            AppLog.log("vpn", "probe inconclusive: VPN network not found")
+            return ProbeResult.INCONCLUSIVE
         }
         try {
             Thread.sleep(400)
         } catch (_: InterruptedException) {
-            return false
+            return ProbeResult.INCONCLUSIVE
         }
         for (url in PROBE_URLS) {
-            if (stopRequested) return false // a stop mid-probe ends it now, not after ~20 s of timeouts
+            if (stopRequested) return ProbeResult.INCONCLUSIVE // a stop mid-probe ends it now, not after ~20 s of timeouts
             var conn: HttpURLConnection? = null
             try {
                 conn = network.openConnection(URL(url)) as HttpURLConnection
@@ -444,14 +483,14 @@ class AutoConnectVpnService : VpnService() {
                 conn.readTimeout = 7_000
                 val code = conn.responseCode
                 AppLog.log("vpn", "probe $url -> HTTP $code")
-                if (code in 200..399) return true
+                if (code in 200..399) return ProbeResult.OK
             } catch (e: Exception) {
                 AppLog.log("vpn", "probe $url failed: ${e.message}")
             } finally {
                 conn?.disconnect()
             }
         }
-        return false
+        return ProbeResult.FAILED
     }
 
     /** Set while a stop teardown is running; a session that starts in
