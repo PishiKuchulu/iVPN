@@ -1,0 +1,15 @@
+# Secrets — NEVER commit
+.env.local
+.env*.local
+keys/*.pem
+keys/private*
+
+# Local runtime data (report counters are rebuilt from KV in production)
+data/reports.json
+
+# Generated bundle IS committed/deployed (it is the served artifact)
+!data/bundle.json
+!data/aggregation.json
+
+node_modules/
+.vercel/

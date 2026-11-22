@@ -1,0 +1,9 @@
+{
+  "purpose": "AutoConnect bundle signature verification (embed this in the Android app)",
+  "algorithm": "Ed25519",
+  "public_key_base64": "3kz5mOnKQSno3Ip+cUzn1tncIVnmQzOL1uUfyFmXI+g=",
+  "public_key_spki_base64": "MCowBQYDK2VwAyEA3kz5mOnKQSno3Ip+cUzn1tncIVnmQzOL1uUfyFmXI+g=",
+  "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3kz5mOnKQSno3Ip+cUzn1tncIVnmQzOL1uUfyFmXI+g=\n-----END PUBLIC KEY-----\n",
+  "fingerprint_sha256": "34caa0012f8614551cee89fd3a663da8c32ce877e5af38905ddd7963dd503962",
+  "created_at": "2026-11-20T20:37:19.177Z"
+}

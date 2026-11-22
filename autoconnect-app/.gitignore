@@ -1,0 +1,11 @@
+/build/
+/.gradle/
+local.properties
+*.iml
+.idea/
+# Secrets are never part of this project. The bundle-signing PRIVATE key
+# must never appear here (only the public key is embedded, in source).
+*.keystore
+*.jks
+.env*
+tests-out/

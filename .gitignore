@@ -1,0 +1,12 @@
+build/
+.gradle/
+local.properties
+tests-out/
+out/
+__pycache__/
+*.pyc
+.env.local
+.env*.local
+.vercel/
+autoconnect-backend/data/*
+!autoconnect-backend/data/bundle.json

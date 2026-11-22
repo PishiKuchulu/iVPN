@@ -1,0 +1,17 @@
+# AutoConnect — sing-box core pin (SINGLE SOURCE OF TRUTH for the embedded core version)
+# Every consumer (app Gradle build, core-adapter About/diagnostics, CI) must read
+# the core version from here or from the constant generated from here.
+# Bump ONLY via UPDATE-PLAYBOOK.md. Never patch sing-box source.
+CORE_VERSION=1.14.4
+CORE_TAG=v1.14.4
+CORE_REPO=https://github.com/SagerNet/sing-box
+CORE_COMMIT=c005f35
+GOMOBILE_VERSION=v0.1.13
+GO_VERSION=1.25.5
+NDK_PINNED_BY_UPSTREAM=28.0.13004108
+# Proof artifacts (single-ABI arm64-v8a proof build, see PROOF.md; release
+# builds use all ABIs and must re-record these hashes):
+LIBBOX_AAR_SHA256=08ea27a3a33349d1f17ba59d447b20c5167c8895d25eb479ab81b2e43e6361fe
+LIBBOX_AAR_SIZE=28616452
+LIBBOX_LEGACY_AAR_SHA256=f009bab35b11b818e57c43f98cbf98180dab044e0e92b15e89678ea2262c87dd
+LIBBOX_LEGACY_AAR_SIZE=23606998

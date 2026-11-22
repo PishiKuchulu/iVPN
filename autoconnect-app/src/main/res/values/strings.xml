@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Default strings: Persian (Farzad's spec — default language is FA). -->
+<resources>
+    <string name="app_name">اتوکانکت</string>
+    <string name="connect">اتصال</string>
+    <string name="disconnect">قطع اتصال</string>
+    <string name="settings">تنظیمات</string>
+    <string name="status_idle">آماده اتصال</string>
+    <string name="status_connecting">در حال یافتن بهترین مسیر…</string>
+    <string name="status_connected">متصل شد</string>
+    <string name="status_failed">مسیر سالمی پیدا نشد؛ چند دقیقه دیگر دوباره تلاش کنید</string>
+    <string name="status_stopping">در حال قطع اتصال…</string>
+    <string name="operator_label">اپراتور</string>
+    <string name="vpn_running">اتوکانکت در حال اجراست</string>
+    <string name="connecting_label">در حال اتصال…</string>
+    <string name="stopping_label">در حال قطع…</string>
+    <string name="bundle_label">نسخه بسته</string>
+    <string name="config_label">کانفیگ</string>
+    <string name="exit_label">کشور خروجی</string>
+    <string name="error_label">آخرین خطا</string>
+    <string name="session_duration">مدت اتصال</string>
+    <string name="diagnostics_title">عیب‌یابی</string>
+
+    <string name="settings_update">به‌روزرسانی اپ</string>
+    <string name="check_update">بررسی به‌روزرسانی</string>
+    <string name="update_stub_message">بررسی به‌روزرسانی در این نسخه آزمایشی هنوز به کانال انتشار وصل نیست.</string>
+    <string name="settings_language">زبان</string>
+    <string name="settings_theme">پوسته</string>
+    <string name="theme_system">خودکار (سیستم)</string>
+    <string name="theme_light">روشن</string>
+    <string name="theme_dark">تیره</string>
+    <string name="settings_reports">گزارش ناشناس</string>
+    <string name="reports_toggle">ارسال گزارش ناشناس موفقیت/شکست کانفیگ‌ها</string>
+    <string name="reports_explain">فقط شناسه کانفیگ، اپراتور، مرحله و نتیجه ارسال می‌شود؛ بدون آی‌پی و بدون شناسه دستگاه.</string>
+    <string name="settings_log">گزارش رویدادها (لاگ)</string>
+    <string name="view_log">مشاهده لاگ</string>
+    <string name="settings_about">درباره</string>
+    <string name="app_version">نسخه اپ</string>
+    <string name="core_version_pin">نسخه هسته (پین‌شده)</string>
+    <string name="core_version_runtime">نسخه هسته (در حال اجرا)</string>
+    <string name="about_license_note">هسته اتصال: sing-box (تحت GPL-3.0) — نسخه دقیق و قابل‌به‌روزرسانی در فایل پین پروژه ثبت شده است.</string>
+    <string name="refresh">تازه‌سازی</string>
+    <string name="clear_log">پاک‌کردن لاگ</string>
+    <string name="log_empty">هنوز رویدادی ثبت نشده است.</string>
+</resources>

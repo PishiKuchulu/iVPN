@@ -1,0 +1,117 @@
+{
+  "version": 3,
+  "built_at": "2026-11-22T10:05:59.807Z",
+  "soft_expires_at": "2026-11-22T16:05:59.807Z",
+  "sample_only": true,
+  "configs": [
+    {
+      "credential": "SAMPLE-ONLY-00000000-0000-4000-8000-000000000001",
+      "exit": {
+        "asn": 9009,
+        "country": "DE",
+        "residential": false
+      },
+      "first_seen": "2026-11-20T00:00:00Z",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "sample-de1.example.invalid",
+      "source_count": 1,
+      "tls": {
+        "alpn": [
+          "h2"
+        ],
+        "enabled": true,
+        "sni": "cdn.example.invalid"
+      },
+      "transport": {
+        "host": "cdn.example.invalid",
+        "path": "/ray",
+        "type": "ws"
+      },
+      "id": "sha256:18fb65d0b6b36af7c4ef140f0d1415fd8c1d724979279f3c4ba4ef8d34066c9c",
+      "excluded_operators": []
+    },
+    {
+      "credential": "SAMPLE-ONLY-00000000-0000-4000-8000-000000000002",
+      "exit": {
+        "asn": 9009,
+        "country": "NL",
+        "residential": false
+      },
+      "first_seen": "2026-11-20T00:00:00Z",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vmess",
+      "server": "sample-nl1.example.invalid",
+      "source_count": 1,
+      "tls": {
+        "alpn": [
+          "h2",
+          "http/1.1"
+        ],
+        "enabled": true,
+        "sni": "sample-nl1.example.invalid"
+      },
+      "transport": {
+        "type": "tcp"
+      },
+      "id": "sha256:f3d5b05a8a355d1e248c886936360776e0aadd0c6ed655c5ecb00fd40ecc1434",
+      "excluded_operators": []
+    },
+    {
+      "credential": "SAMPLE-ONLY-trojan-placeholder-not-a-real-secret",
+      "exit": {
+        "asn": 24940,
+        "country": "FI",
+        "residential": false
+      },
+      "first_seen": "2026-11-20T00:00:00Z",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "trojan",
+      "server": "sample-fi1.example.invalid",
+      "source_count": 1,
+      "tls": {
+        "alpn": [
+          "h2",
+          "http/1.1"
+        ],
+        "enabled": true,
+        "sni": "sample-fi1.example.invalid"
+      },
+      "transport": {
+        "type": "tcp"
+      },
+      "id": "sha256:fa7dae2ad370d3316c22376c972ee37933f571542e10e34c12156e21b49b1703",
+      "excluded_operators": []
+    },
+    {
+      "credential": "SAMPLE-ONLY-hysteria2-placeholder-not-a-real-secret",
+      "exit": {
+        "asn": 24940,
+        "country": "SE",
+        "residential": false
+      },
+      "first_seen": "2026-11-20T00:00:00Z",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "hysteria2",
+      "server": "sample-se1.example.invalid",
+      "source_count": 1,
+      "tls": {
+        "alpn": [
+          "h3"
+        ],
+        "enabled": true,
+        "sni": "sample-se1.example.invalid"
+      },
+      "transport": {
+        "type": "udp"
+      },
+      "id": "sha256:7c09a97259ca2598f6faf899cf5f03be6480ee38d19be86c69b259b9018342a3",
+      "excluded_operators": []
+    }
+  ],
+  "signature": "ed25519:Vs39PDTRBTh1Zq4f+fmX85kwbnjzemUjJu1fXdjuy+RGyiTACVDkvqSviT98wAS8RO1GZx8mqY/OJNOIVGHnAw=="
+}

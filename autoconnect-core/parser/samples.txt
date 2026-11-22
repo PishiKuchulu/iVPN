@@ -1,0 +1,12 @@
+// AutoConnect parser sample links — ALL fabricated, dummy credentials,
+// .example.invalid hosts. One link per line; "//" lines are comments.
+vless://11111111-2222-4333-8444-555555555555@de1.example.invalid:443?type=ws&security=tls&path=%2Fray&host=cdn.example.invalid&sni=cdn.example.invalid&alpn=h2&fp=chrome#Sample%20DE
+vless://22222222-3333-4444-8555-666666666666@nl1.example.invalid:443?type=grpc&security=reality&serviceName=grpc-service&sni=www.example.invalid&fp=chrome&pbk=YGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn8&sid=ab12&flow=xtls-rprx-vision#Reality
+vmess://eyJ2IjogIjIiLCAicHMiOiAiU2FtcGxlIFZNZXNzIFdTIiwgImFkZCI6ICJubDEuZXhhbXBsZS5pbnZhbGlkIiwgInBvcnQiOiAiNDQzIiwgImlkIjogIjMzMzMzMzMzLTQ0NDQtNDU1NS04NjY2LTc3Nzc3Nzc3Nzc3NyIsICJhaWQiOiAiMCIsICJzY3kiOiAiYXV0byIsICJuZXQiOiAid3MiLCAidHlwZSI6ICJub25lIiwgImhvc3QiOiAiY2RuLmV4YW1wbGUuaW52YWxpZCIsICJwYXRoIjogIi92bXdzIiwgInRscyI6ICJ0bHMiLCAic25pIjogImNkbi5leGFtcGxlLmludmFsaWQiLCAiYWxwbiI6ICJoMixodHRwLzEuMSIsICJmcCI6ICJjaHJvbWUifQ==
+trojan://dummy-trojan-secret@fi1.example.invalid:443?sni=fi1.example.invalid&alpn=h2,http/1.1#Trojan%20Sample
+ss://YWVzLTI1Ni1nY206ZHVtbXktc3Mtc2VjcmV0@ss1.example.invalid:8388?plugin=obfs-local%3Bobfs%3Dhttp%3Bobfs-host%3Dcdn.example.invalid#SS%20SIP002
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpkdW1teS1zcy1zZWNyZXQtMkBzczIuZXhhbXBsZS5pbnZhbGlkOjgzODk=#SS%20Legacy
+hysteria2://dummy-hy2-auth@se1.example.invalid:443?sni=se1.example.invalid&obfs=salamander&obfs-password=dummy-obfs-secret&upmbps=50&downmbps=100#HY2
+tuic://44444444-5555-4666-8777-888888888888:dummy-tuic-secret@de2.example.invalid:443?congestion_control=bbr&udp_relay_mode=native&sni=de2.example.invalid&alpn=h3#TUIC
+wireguard://AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8%3D@wg1.example.invalid:51820?publickey=ICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj8%3D&presharedkey=QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaW1xdXl8%3D&address=10.0.0.2%2F32&reserved=1,2,3&mtu=1280&allowedips=0.0.0.0%2F0,::%2F0#WG
+vmess://!!!not-base64!!!
