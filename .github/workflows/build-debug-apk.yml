@@ -52,6 +52,8 @@ jobs:
           go run ./cmd/internal/build_libbox -target android -platform android/arm64
           ls -la libbox.aar
           sha256sum libbox.aar
+          echo "08ea27a3a33349d1f17ba59d447b20c5167c8895d25eb479ab81b2e43e6361fe  libbox.aar" | sha256sum -c -
+          mkdir -p "$GITHUB_WORKSPACE/autoconnect-app/libs"
           cp libbox.aar "$GITHUB_WORKSPACE/autoconnect-app/libs/libbox.aar"
 
       - name: Build the debug APK
