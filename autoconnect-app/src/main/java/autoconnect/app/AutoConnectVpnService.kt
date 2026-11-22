@@ -7,7 +7,9 @@ import autoconnect.adapter.ProfileBuilder
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -16,6 +18,7 @@ import android.net.VpnService
 import android.os.ParcelFileDescriptor
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Locale
 import kotlin.concurrent.thread
 
 /**
@@ -50,7 +53,16 @@ class AutoConnectVpnService : VpnService() {
         const val ACTION_START = "autoconnect.app.action.START"
         const val ACTION_STOP = "autoconnect.app.action.STOP"
         const val EXTRA_OPERATOR = "operator"
-        private const val PROBE_URL = "https://autoconnect-backend.vercel.app/api/bundle"
+        // The probe must prove general through-tunnel connectivity, not
+        // the reachability of one host: the first version probed only
+        // our own backend, whose hostname did not even resolve on
+        // Farzad's network (on-device test, 2026-11-22). Any single
+        // success counts; the endpoints are independent operators.
+        private val PROBE_URLS = listOf(
+            "https://autoconnect-backend.vercel.app/api/bundle",
+            "https://www.gstatic.com/generate_204",
+            "https://cp.cloudflare.com/generate_204",
+        )
         private const val MAX_ATTEMPTS = 10
         private const val HEALTH_INTERVAL_MS = 20_000L
         private const val MAX_SWITCHES_PER_WINDOW = 3
@@ -345,23 +357,30 @@ class AutoConnectVpnService : VpnService() {
         return MonitorOutcome.STOPPED
     }
 
-    /** Real traffic check through the established tunnel. */
+    /** Real traffic check through the established tunnel: the first
+     *  endpoint that answers wins. */
     private fun probeThroughTunnel(): Boolean {
-        var conn: HttpURLConnection? = null
-        return try {
+        try {
             Thread.sleep(400)
-            conn = URL(PROBE_URL).openConnection() as HttpURLConnection
-            conn.connectTimeout = 7_000
-            conn.readTimeout = 7_000
-            val code = conn.responseCode
-            AppLog.log("vpn", "probe HTTP $code")
-            code in 200..399
-        } catch (e: Exception) {
-            AppLog.log("vpn", "probe failed: ${e.message}")
-            false
-        } finally {
-            conn?.disconnect()
+        } catch (_: InterruptedException) {
+            return false
         }
+        for (url in PROBE_URLS) {
+            var conn: HttpURLConnection? = null
+            try {
+                conn = URL(url).openConnection() as HttpURLConnection
+                conn.connectTimeout = 7_000
+                conn.readTimeout = 7_000
+                val code = conn.responseCode
+                AppLog.log("vpn", "probe $url -> HTTP $code")
+                if (code in 200..399) return true
+            } catch (e: Exception) {
+                AppLog.log("vpn", "probe $url failed: ${e.message}")
+            } finally {
+                conn?.disconnect()
+            }
+        }
+        return false
     }
 
     private fun stopVpn() {
@@ -512,10 +531,23 @@ class AutoConnectVpnService : VpnService() {
         )
     }
 
+    /** A service's own context follows the system locale, not the
+     *  in-app language preference — wrap it the same way
+     *  [BaseActivity] wraps activities so notification text matches
+     *  the language the user picked in Settings. */
+    private fun localizedContext(): Context {
+        val locale = Locale(Prefs(this).language)
+        val config = Configuration(resources.configuration)
+        config.setLocale(locale)
+        config.setLayoutDirection(locale)
+        return createConfigurationContext(config)
+    }
+
     private fun startForegroundNotification() {
+        val strings = localizedContext()
         val notification = Notification.Builder(this, CHANNEL_ID)
-            .setContentTitle(getString(R.string.app_name))
-            .setContentText(getString(R.string.vpn_running))
+            .setContentTitle(strings.getString(R.string.app_name))
+            .setContentText(strings.getString(R.string.vpn_running))
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .build()
         // VpnService is system-exempt from the API-34 foreground-service

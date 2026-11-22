@@ -46,8 +46,16 @@ data class Bundle(
  * an *authenticity* failure of the fetched copy (bad signature, rollback
  * attempt) both fall back to the last verified cache — the cache is
  * independently re-verified and version-checked, so serving it is safe,
- * and a tampered fetch can never replace or poison it. The connect
- * attempt hard-fails only when there is no usable verified cache.
+ * and a tampered fetch can never replace or poison it.
+ *
+ * Third tier (2026-11-22, Farzad's first on-device test): the bundle
+ * that was current when this APK was built ships as an asset
+ * (`bundle-seed.json`). On his network the backend host's DNS did not
+ * resolve at all, so a first run with an empty cache had nothing to
+ * connect with. The seed passes through the exact same verification
+ * (signature + anti-rollback) before use and is then promoted into the
+ * cache; it can never outrank a verified cache or a fresher fetch.
+ * The connect attempt hard-fails only when no tier yields a bundle.
  *
  * The embedded key is PUBLIC (fingerprint
  * 34caa0012f8614551cee89fd3a663da8c32ce877e5af38905ddd7963dd503962,
@@ -59,12 +67,21 @@ class BundleClient internal constructor(
     private val watermark: WatermarkStore,
     private val fetcher: (String) -> String,
     private val publicKeyB64: String = PUBLIC_KEY_B64,
+    private val seedProvider: () -> String? = { null },
 ) {
 
     constructor(context: Context) : this(
         cacheFile = File(context.filesDir, "bundle-cache.json"),
         watermark = PrefsWatermarkStore(Prefs(context)),
         fetcher = { url -> defaultHttpGet(url) },
+        seedProvider = {
+            try {
+                context.assets.open("bundle-seed.json").bufferedReader(Charsets.UTF_8).readText()
+            } catch (e: Exception) {
+                AppLog.log("bundle", "bundled seed unreadable: ${e.message}")
+                null
+            }
+        },
     )
 
     companion object {
@@ -92,7 +109,8 @@ class BundleClient internal constructor(
     }
 
     /** Fetch fresh from the backend; on ANY fetch failure, serve the
-     *  re-verified cache; hard-fail only with no usable cache. */
+     *  re-verified cache, then the verified bundled seed; hard-fail only
+     *  when no tier yields a usable bundle. */
     fun fetchVerified(): Bundle {
         return try {
             val text = fetcher(BuildConfig.BACKEND_BASE_URL + BUNDLE_PATH)
@@ -107,7 +125,34 @@ class BundleClient internal constructor(
             bundle
         } catch (e: Exception) {
             AppLog.log("bundle", "fetch failed (${e.javaClass.simpleName}: ${e.message}); trying verified cache")
-            loadCachedVerified() ?: throw BundleException("fetch failed and no verified cached bundle: ${e.message}")
+            loadCachedVerified()
+                ?: loadSeedVerified()
+                ?: throw BundleException("fetch failed and no verified cached bundle: ${e.message}")
+        }
+    }
+
+    /** The APK's bundled seed bundle, verified exactly like a fetch.
+     *  On success it is promoted into the cache so later runs treat it
+     *  as the last verified bundle. */
+    fun loadSeedVerified(): Bundle? {
+        val text = try {
+            seedProvider()
+        } catch (e: Exception) {
+            AppLog.log("bundle", "seed provider failed: ${e.message}")
+            null
+        } ?: return null
+        return try {
+            val bundle = verifyAndParse(text)
+            try {
+                cacheFile.writeText(text)
+            } catch (e: Exception) {
+                AppLog.log("bundle", "seed cache promotion failed: ${e.message}")
+            }
+            AppLog.log("bundle", "serving bundled seed v${bundle.version} configs=${bundle.configJsonObjects.size}")
+            bundle
+        } catch (e: Exception) {
+            AppLog.log("bundle", "bundled seed rejected: ${e.message}")
+            null
         }
     }
 

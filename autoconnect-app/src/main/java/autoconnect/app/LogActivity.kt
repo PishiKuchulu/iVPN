@@ -1,10 +1,14 @@
 package autoconnect.app
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 
 /** In-app LOG viewer (Farzad's explicit request): connection attempts and
  *  results, bundle verification events, report queue activity. Presentation
@@ -22,11 +26,20 @@ class LogActivity : BaseActivity() {
 
         val actions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         val refresh = Ui.cardButton(this, getString(R.string.refresh)) { render() }
+        val copy = Ui.cardButton(this, getString(R.string.copy_log)) {
+            val text = AppLog.all().joinToString("\n")
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+            clipboard?.setPrimaryClip(ClipData.newPlainText("AutoConnect log", text))
+            Toast.makeText(this, getString(R.string.log_copied), Toast.LENGTH_SHORT).show()
+        }
         val clear = Ui.cardButton(this, getString(R.string.clear_log)) {
             AppLog.clear()
             render()
         }
         actions.addView(refresh, LinearLayout.LayoutParams(0, -2, 1f))
+        actions.addView(copy, LinearLayout.LayoutParams(0, -2, 1f).apply {
+            setMarginStart(Ui.dp(this@LogActivity, Ui.SPACE_S))
+        })
         actions.addView(clear, LinearLayout.LayoutParams(0, -2, 1f).apply {
             setMarginStart(Ui.dp(this@LogActivity, Ui.SPACE_S))
         })

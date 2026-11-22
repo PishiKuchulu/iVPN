@@ -30,6 +30,7 @@ mkdir -p "$OUT"
   src/main/java/autoconnect/app/ReportStore.kt \
   src/main/java/autoconnect/app/ReportQueue.kt \
   src/main/java/autoconnect/app/BundleClient.kt \
+  src/main/java/autoconnect/app/OperatorKeys.kt \
   tests/kotlin/autoconnect/app/*.kt \
   -cp "$ANDROID_JAR" \
   -include-runtime -d "$OUT/app-tests.jar"

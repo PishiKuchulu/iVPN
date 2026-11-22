@@ -9,34 +9,47 @@ import android.telephony.TelephonyManager
 /**
  * Detects the operator key for ranking/reporting (architecture doc §7.1).
  *
- * The criterion is the MCC/MNC of the default **data** subscription
- * (doc §7.1: «اپراتورِ سیمِ دیتای فعال ملاک است»), resolved via
- * [SubscriptionManager.getDefaultDataSubscriptionId] and a
- * per-subscription [TelephonyManager] — NOT the default (voice)
- * subscription, which on dual-SIM phones is often a different operator
- * (AUD-002). No dangerous permission is required for the operator codes;
- * every failure path falls back gracefully to the default subscription,
- * then to "wifi" or "unknown" — detection must never crash or block a
- * connection attempt.
+ * The key names the provider of the connection the phone is actually
+ * using for internet (Farzad's on-device report, 2026-11-22 — the old
+ * SIM-first logic reported "mci" while the phone was on Wi-Fi):
+ *
+ * - Default network is Wi-Fi → "wifi".
+ * - Otherwise the MCC/MNC of the default **data** subscription
+ *   (doc §7.1: «اپراتورِ سیمِ دیتای فعال ملاک است»), resolved via
+ *   [SubscriptionManager.getDefaultDataSubscriptionId] and a
+ *   per-subscription [TelephonyManager] — NOT the default (voice)
+ *   subscription, which on dual-SIM phones is often a different operator
+ *   (AUD-002). The registered-network operator is preferred over the
+ *   SIM's home operator: it names the network actually serving data.
+ *
+ * No dangerous permission is required for the operator codes; every
+ * failure path falls back gracefully — detection must never crash or
+ * block a connection attempt. Every detection is logged with its raw
+ * inputs so a log export shows exactly what the phone reported.
  */
 object OperatorDetector {
 
     fun detect(context: Context): String {
+        var onWifi = false
+        var dataCode: String? = null
+        var fallbackCode: String? = null
         try {
+            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+            val caps = cm?.getNetworkCapabilities(cm.activeNetwork)
+            onWifi = caps?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
+
             val baseTm = context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
             val dataTm = defaultDataTelephonyManager(context, baseTm)
-            val sim = operatorCode(dataTm) ?: operatorCode(baseTm)
-            if (sim != null) {
-                val mcc = sim.substring(0, 3)
-                val mnc = sim.substring(3).trimStart('0').ifEmpty { "0" }
-                return keyFor(mcc, mnc)
-            }
+            dataCode = operatorCode(dataTm)
+            fallbackCode = operatorCode(baseTm)
         } catch (e: SecurityException) {
             AppLog.log("operator", "telephony read denied: ${e.message}")
         } catch (e: Exception) {
             AppLog.log("operator", "detection failed: ${e.message}")
         }
-        return if (isOnWifi(context)) "wifi" else "unknown"
+        val key = OperatorKeys.decide(onWifi, dataCode, fallbackCode)
+        AppLog.log("operator", "wifi=$onWifi dataOp=$dataCode fallbackOp=$fallbackCode -> $key")
+        return key
     }
 
     /** TelephonyManager bound to the default data subscription, or null
@@ -55,27 +68,7 @@ object OperatorDetector {
 
     private fun operatorCode(tm: TelephonyManager?): String? {
         if (tm == null) return null
-        return tm.simOperator?.takeIf { it.length >= 5 }
-            ?: tm.networkOperator?.takeIf { it.length >= 5 }
-    }
-
-    private fun keyFor(mcc: String, mnc: String): String {
-        if (mcc != "432") return "unknown" // non-Iranian SIM: no operator ranking applies
-        return when (mnc) {
-            "11" -> "mci"
-            "35" -> "irancell"
-            "20" -> "rightel"
-            else -> "other-ir"
-        }
-    }
-
-    private fun isOnWifi(context: Context): Boolean {
-        return try {
-            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-            val caps = cm?.getNetworkCapabilities(cm.activeNetwork)
-            caps?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
-        } catch (_: Exception) {
-            false
-        }
+        return tm.networkOperator?.takeIf { it.length >= 5 }
+            ?: tm.simOperator?.takeIf { it.length >= 5 }
     }
 }

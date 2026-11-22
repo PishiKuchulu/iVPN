@@ -40,5 +40,7 @@
     <string name="about_license_note">Connection core: sing-box (GPL-3.0) — the exact pinned, updatable version is recorded in the project pin file.</string>
     <string name="refresh">Refresh</string>
     <string name="clear_log">Clear log</string>
+    <string name="copy_log">Copy log</string>
+    <string name="log_copied">Log copied</string>
     <string name="log_empty">No events recorded yet.</string>
 </resources>

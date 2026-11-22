@@ -228,6 +228,76 @@ private fun r2NoCacheHardFails() {
     check("R2: tampered bundle was never cached", !cacheFile.exists())
 }
 
+// ------------------------------------------------- R8: bundled seed
+
+private fun r8SeedFallback() {
+    val factory = BundleFactory()
+    val dir = tempDir("r8a")
+    val cacheFile = File(dir, "bundle-cache.json")
+    val watermark = MemWatermark()
+    val client = BundleClient(
+        cacheFile, watermark,
+        { throw BundleTransportException("Unable to resolve host") },
+        factory.publicKeyB64,
+        seedProvider = { factory.signedBundle(4) },
+    )
+    val served = client.fetchVerified()
+    check("R8: fetch DNS failure + no cache -> verified seed serves", served.version == 4)
+    check("R8: seed promoted into cache", cacheFile.exists() && cacheFile.readText().contains("\"version\":4"))
+    check("R8: watermark advanced to seed version", watermark.lastBundleVersion == 4)
+}
+
+private fun r8TamperedSeedHardFails() {
+    val factory = BundleFactory()
+    val dir = tempDir("r8b")
+    val cacheFile = File(dir, "bundle-cache.json")
+    val watermark = MemWatermark()
+    val client = BundleClient(
+        cacheFile, watermark,
+        { throw BundleTransportException("Unable to resolve host") },
+        factory.publicKeyB64,
+        seedProvider = { factory.tamperedBundle(4) },
+    )
+    val threw = try {
+        client.fetchVerified(); false
+    } catch (_: BundleException) {
+        true
+    }
+    check("R8: tampered seed hard-fails (no unverified path)", threw)
+    check("R8: tampered seed never cached", !cacheFile.exists())
+}
+
+private fun r8CacheOutranksSeed() {
+    val factory = BundleFactory()
+    val dir = tempDir("r8c")
+    val cacheFile = File(dir, "bundle-cache.json")
+    val watermark = MemWatermark()
+    var fetcher: (String) -> String = { factory.signedBundle(5) }
+    val client = BundleClient(
+        cacheFile, watermark, { fetcher(it) }, factory.publicKeyB64,
+        seedProvider = { factory.signedBundle(4) },
+    )
+    client.fetchVerified() // caches v5
+    fetcher = { throw BundleTransportException("Unable to resolve host") }
+    check("R8: verified cache v5 outranks older seed v4", client.fetchVerified().version == 5)
+}
+
+// ------------------------------------------------- R9: operator keys
+
+private fun r9OperatorKeys() {
+    check("R9: MCI code -> mci", OperatorKeys.keyForMccMnc("43211") == "mci")
+    check("R9: Irancell code -> irancell", OperatorKeys.keyForMccMnc("43235") == "irancell")
+    check("R9: Rightel code -> rightel", OperatorKeys.keyForMccMnc("43220") == "rightel")
+    check("R9: Taliya code -> taliya", OperatorKeys.keyForMccMnc("43232") == "taliya")
+    check("R9: other Iranian MNC -> other-ir", OperatorKeys.keyForMccMnc("43299") == "other-ir")
+    check("R9: non-Iranian code -> unknown", OperatorKeys.keyForMccMnc("310260") == "unknown")
+    check("R9: short code -> unknown", OperatorKeys.keyForMccMnc("432") == "unknown")
+    check("R9: Wi-Fi active wins over SIM", OperatorKeys.decide(true, "43211", "43211") == "wifi")
+    check("R9: cellular uses data-sub code", OperatorKeys.decide(false, "43235", "43211") == "irancell")
+    check("R9: falls back to base code", OperatorKeys.decide(false, null, "43211") == "mci")
+    check("R9: no inputs -> unknown", OperatorKeys.decide(false, null, null) == "unknown")
+}
+
 // ---------------------------------------------------------------- main
 
 fun main() {
@@ -237,6 +307,10 @@ fun main() {
     r2TransportFallsBackToCache()
     r2TamperedFetchDoesNotPoisonCache()
     r2NoCacheHardFails()
+    r8SeedFallback()
+    r8TamperedSeedHardFails()
+    r8CacheOutranksSeed()
+    r9OperatorKeys()
 
     println("AppTests: $passed passed, $failed failed, ${passed + failed} total")
     if (failed > 0) {

@@ -22,6 +22,23 @@ class SettingsActivity : BaseActivity() {
 
     private var aboutTaps = 0
 
+    /**
+     * Language and theme live in each activity's own configuration
+     * context (see [BaseActivity.attachBaseContext]), so recreating
+     * Settings alone left every other screen — above all the main
+     * screen underneath — in the old language (Farzad's on-device
+     * report, 2026-11-22: switched to English, main screen stayed
+     * Persian). Restarting the task rebuilds every screen under the
+     * new preference.
+     */
+    private fun restartAppTask() {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        finish()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val prefs = Prefs(this)
@@ -58,23 +75,23 @@ class SettingsActivity : BaseActivity() {
         addSection(R.string.settings_language)
         addRow(Ui.cardButton(this, "فارسی / Persian") {
             prefs.language = "fa"
-            recreate()
+            restartAppTask()
         })
         addRow(Ui.cardButton(this, "English") {
             prefs.language = "en"
-            recreate()
+            restartAppTask()
         })
 
         // ---- theme ----
         addSection(R.string.settings_theme)
         addRow(Ui.cardButton(this, getString(R.string.theme_system)) {
-            prefs.theme = "system"; recreate()
+            prefs.theme = "system"; restartAppTask()
         })
         addRow(Ui.cardButton(this, getString(R.string.theme_light)) {
-            prefs.theme = "light"; recreate()
+            prefs.theme = "light"; restartAppTask()
         })
         addRow(Ui.cardButton(this, getString(R.string.theme_dark)) {
-            prefs.theme = "dark"; recreate()
+            prefs.theme = "dark"; restartAppTask()
         })
 
         // ---- anonymous reports ----

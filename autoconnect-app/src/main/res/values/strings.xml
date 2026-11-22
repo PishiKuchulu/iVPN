@@ -41,5 +41,7 @@
     <string name="about_license_note">هسته اتصال: sing-box (تحت GPL-3.0) — نسخه دقیق و قابل‌به‌روزرسانی در فایل پین پروژه ثبت شده است.</string>
     <string name="refresh">تازه‌سازی</string>
     <string name="clear_log">پاک‌کردن لاگ</string>
+    <string name="copy_log">کپی لاگ</string>
+    <string name="log_copied">لاگ کپی شد</string>
     <string name="log_empty">هنوز رویدادی ثبت نشده است.</string>
 </resources>
