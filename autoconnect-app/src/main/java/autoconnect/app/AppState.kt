@@ -18,6 +18,13 @@ object AppState {
     @Volatile
     var bundleVersion: Int = 0
 
+    /** The bundle in use is past its producer-declared soft expiry
+     *  (served from cache/seed because no fresh fetch succeeded).
+     *  Shown in the details card — stale data is labelled, never
+     *  silently trusted (external audit AUD-003). */
+    @Volatile
+    var bundleStale: Boolean = false
+
     @Volatile
     var currentConfigId: String? = null
 

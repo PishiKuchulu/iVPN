@@ -12,13 +12,43 @@
 set -euo pipefail
 
 cd "$(dirname "$0")"
+APP_DIR="$(pwd)"
+REPO_ROOT="$(dirname "$APP_DIR")"
 
-export JAVA_HOME="${JAVA_HOME:-$HOME/workspace/.jdk17}"
-export PATH="$JAVA_HOME/bin:$PATH"
+# Toolchain resolution (AUD-007): env first, then PATH / standard SDK
+# locations, then the owner's legacy workspace layout — so a fresh
+# clone / CI runner works without editing this file.
+if [ -z "${JAVA_HOME:-}" ] && [ -x "$HOME/workspace/.jdk17/bin/java" ]; then
+  export JAVA_HOME="$HOME/workspace/.jdk17"
+fi
+if [ -n "${JAVA_HOME:-}" ]; then
+  export PATH="$JAVA_HOME/bin:$PATH"
+fi
 
-KOTLINC="${KOTLINC:-$HOME/workspace/tools/kotlinc/kotlinc/bin/kotlinc}"
-ANDROID_JAR="${ANDROID_JAR:-$HOME/workspace/tools/android-sdk/platforms/android-35/android.jar}"
-ADAPTER_SRC="$HOME/workspace/autoconnect-core/adapter/src/main/kotlin"
+if [ -z "${KOTLINC:-}" ]; then
+  if command -v kotlinc >/dev/null 2>&1; then
+    KOTLINC="$(command -v kotlinc)"
+  elif [ -x "$HOME/workspace/tools/kotlinc/kotlinc/bin/kotlinc" ]; then
+    KOTLINC="$HOME/workspace/tools/kotlinc/kotlinc/bin/kotlinc"
+  else
+    echo "kotlinc not found: set KOTLINC or put kotlinc on PATH" >&2
+    exit 1
+  fi
+fi
+
+if [ -z "${ANDROID_JAR:-}" ]; then
+  SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+  if [ -n "$SDK_ROOT" ] && [ -f "$SDK_ROOT/platforms/android-35/android.jar" ]; then
+    ANDROID_JAR="$SDK_ROOT/platforms/android-35/android.jar"
+  elif [ -f "$HOME/workspace/tools/android-sdk/platforms/android-35/android.jar" ]; then
+    ANDROID_JAR="$HOME/workspace/tools/android-sdk/platforms/android-35/android.jar"
+  else
+    echo "android.jar (API 35) not found: set ANDROID_JAR or ANDROID_HOME" >&2
+    exit 1
+  fi
+fi
+
+ADAPTER_SRC="$REPO_ROOT/autoconnect-core/adapter/src/main/kotlin"
 OUT="tests-out"
 mkdir -p "$OUT"
 

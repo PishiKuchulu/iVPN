@@ -6,6 +6,7 @@ credentials. Run:  python3 -m unittest test_parser -v
 
 import json
 import os
+from pathlib import Path
 import shutil
 import subprocess
 import sys
@@ -345,7 +346,13 @@ class TestBackendIdParity(unittest.TestCase):
     """Parsed ids must equal the backend's configIdFor for the same records."""
 
     def test_ids_match_node_backend(self):
-        backend = os.path.expanduser("~/workspace/autoconnect-backend")
+        # AUD-007: locate the backend relative to this file
+        # (autoconnect-core/parser/ -> repo root -> autoconnect-backend),
+        # overridable via BACKEND_DIR; no machine-specific paths.
+        backend = os.environ.get(
+            "BACKEND_DIR",
+            str(Path(__file__).resolve().parents[2] / "autoconnect-backend"),
+        )
         records = [parse_link(link)["record"] for link in ALL_GOOD]
         script = (
             "import {configIdFor} from './lib/bundle.mjs';"

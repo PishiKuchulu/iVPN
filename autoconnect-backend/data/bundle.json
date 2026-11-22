@@ -1,7 +1,7 @@
 {
-  "version": 4,
-  "built_at": "2026-11-22T10:27:17.118Z",
-  "soft_expires_at": "2026-11-22T16:27:17.118Z",
+  "version": 5,
+  "built_at": "2026-11-22T20:28:05.694Z",
+  "soft_expires_at": "2026-11-25T20:28:05.694Z",
   "sample_only": false,
   "configs": [
     {
@@ -1583,5 +1583,5 @@
       "excluded_operators": []
     }
   ],
-  "signature": "ed25519:sIMVCrD+5szjLLlHoY5cJxnymHDN5iZHEqh8AxPoethUqXQUgMRSm+2fEAURB4APT500jM/dk+hhgqbw9J9ACg=="
+  "signature": "ed25519:xrMQKoEPT7fwklvwH3/dBDyAAC4XvEEudpHc3dapATFTkEXZukwqhDyB6U04Os0NE6S9r6BAiOL4LQhPNPD4CQ=="
 }

@@ -26,11 +26,16 @@ object OperatorKeys {
         val mcc = code.substring(0, 3)
         val mnc = code.substring(3).trimStart('0').ifEmpty { "0" }
         if (mcc != "432") return "unknown"
+        // Only keys the backend's report allowlist accepts may be
+        // emitted (autoconnect-backend/lib/validate.mjs OPERATOR_KEYS):
+        // mci, irancell, rightel, other-ir, unknown, wifi. MNC 32
+        // (Taliya) deliberately folds into "other-ir" — emitting a
+        // "taliya" key made the backend reject those users' reports
+        // (external audit AUD-004, 2026-11-22).
         return when (mnc) {
             "11" -> "mci"
             "35" -> "irancell"
             "20" -> "rightel"
-            "32" -> "taliya"
             else -> "other-ir"
         }
     }

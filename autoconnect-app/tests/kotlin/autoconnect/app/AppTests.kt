@@ -12,6 +12,9 @@ import java.io.IOException
 import java.nio.file.Files
 import java.security.KeyPairGenerator
 import java.security.Signature
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Base64
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
@@ -134,11 +137,14 @@ private class BundleFactory {
     val publicKeyB64: String =
         Base64.getEncoder().encodeToString(keyPair.public.encoded.takeLast(32).toByteArray())
 
-    fun signedBundle(version: Int): String {
+    fun signedBundle(
+        version: Int,
+        softExpiresAt: Instant = Instant.now().plus(72, ChronoUnit.HOURS),
+    ): String {
         val entries = linkedMapOf<String, autoconnect.adapter.JsonValue>(
             "version" to jnum(version),
-            "built_at" to jstr("2026-11-21T00:00:00Z"),
-            "soft_expires_at" to jstr("2026-11-21T06:00:00Z"),
+            "built_at" to jstr(DateTimeFormatter.ISO_INSTANT.format(Instant.now())),
+            "soft_expires_at" to jstr(DateTimeFormatter.ISO_INSTANT.format(softExpiresAt)),
             "sample_only" to JsonBool(true),
             "configs" to JsonArr(emptyList()),
         )
@@ -153,9 +159,9 @@ private class BundleFactory {
 
     fun tamperedBundle(version: Int): String {
         val good = signedBundle(version)
-        // Change one payload character after signing: the signature no
-        // longer matches the canonical payload.
-        return good.replace("2026-11-21T00:00:00Z", "2026-11-21T00:00:01Z")
+        // Flip one payload field after signing: the signature no longer
+        // matches the canonical payload.
+        return good.replace("\"sample_only\":true", "\"sample_only\":false")
     }
 }
 
@@ -288,7 +294,7 @@ private fun r9OperatorKeys() {
     check("R9: MCI code -> mci", OperatorKeys.keyForMccMnc("43211") == "mci")
     check("R9: Irancell code -> irancell", OperatorKeys.keyForMccMnc("43235") == "irancell")
     check("R9: Rightel code -> rightel", OperatorKeys.keyForMccMnc("43220") == "rightel")
-    check("R9: Taliya code -> taliya", OperatorKeys.keyForMccMnc("43232") == "taliya")
+    check("R9: Taliya code folds into other-ir (backend allowlist)", OperatorKeys.keyForMccMnc("43232") == "other-ir")
     check("R9: other Iranian MNC -> other-ir", OperatorKeys.keyForMccMnc("43299") == "other-ir")
     check("R9: non-Iranian code -> unknown", OperatorKeys.keyForMccMnc("310260") == "unknown")
     check("R9: short code -> unknown", OperatorKeys.keyForMccMnc("432") == "unknown")
@@ -296,6 +302,58 @@ private fun r9OperatorKeys() {
     check("R9: cellular uses data-sub code", OperatorKeys.decide(false, "43235", "43211") == "irancell")
     check("R9: falls back to base code", OperatorKeys.decide(false, null, "43211") == "mci")
     check("R9: no inputs -> unknown", OperatorKeys.decide(false, null, null) == "unknown")
+}
+
+// ------------------------------------- R10: soft-expiry (audit AUD-003)
+
+private fun r10StaleFetchRejectedFallsBackToCache() {
+    val factory = BundleFactory()
+    val dir = tempDir("r10a")
+    val cacheFile = File(dir, "bundle-cache.json")
+    val watermark = MemWatermark()
+    var fetcher: (String) -> String = { factory.signedBundle(2) }
+    val client = BundleClient(cacheFile, watermark, { fetcher(it) }, factory.publicKeyB64)
+    client.fetchVerified() // fresh v2 cached
+    val cacheBefore = cacheFile.readText()
+
+    fetcher = { factory.signedBundle(3, Instant.now().minus(1, ChronoUnit.HOURS)) } // authentic but stale
+    val served = client.fetchVerified()
+    check("R10: stale fetch rejected -> verified cache serves", served.version == 2)
+    check("R10: stale fetch did not replace the cache", cacheFile.readText() == cacheBefore)
+}
+
+private fun r10StaleCacheServedFlagged() {
+    val factory = BundleFactory()
+    val dir = tempDir("r10b")
+    val cacheFile = File(dir, "bundle-cache.json")
+    val watermark = MemWatermark()
+    var now = System.currentTimeMillis()
+    var fetcher: (String) -> String = { factory.signedBundle(2) }
+    val client = BundleClient(cacheFile, watermark, { fetcher(it) }, factory.publicKeyB64, nowMs = { now })
+    val fresh = client.fetchVerified()
+    check("R10: fresh bundle is not flagged stale", !fresh.stale)
+
+    now += 100 * 3600_000L // +100h — beyond the factory's +72h soft window
+    fetcher = { throw BundleTransportException("Unable to resolve host") }
+    val served = client.fetchVerified()
+    check("R10: stale cache still serves (availability)", served.version == 2)
+    check("R10: stale cache is flagged stale", served.stale)
+}
+
+private fun r10StaleSeedServedFlagged() {
+    val factory = BundleFactory()
+    val dir = tempDir("r10c")
+    val cacheFile = File(dir, "bundle-cache.json")
+    val watermark = MemWatermark()
+    val client = BundleClient(
+        cacheFile, watermark,
+        { throw BundleTransportException("Unable to resolve host") },
+        factory.publicKeyB64,
+        seedProvider = { factory.signedBundle(4, Instant.now().minus(1, ChronoUnit.HOURS)) },
+    )
+    val served = client.fetchVerified()
+    check("R10: stale seed serves on cold start", served.version == 4)
+    check("R10: stale seed is flagged stale", served.stale)
 }
 
 // ---------------------------------------------------------------- main
@@ -311,6 +369,9 @@ fun main() {
     r8TamperedSeedHardFails()
     r8CacheOutranksSeed()
     r9OperatorKeys()
+    r10StaleFetchRejectedFallsBackToCache()
+    r10StaleCacheServedFlagged()
+    r10StaleSeedServedFlagged()
 
     println("AppTests: $passed passed, $failed failed, ${passed + failed} total")
     if (failed > 0) {

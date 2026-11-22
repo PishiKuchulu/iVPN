@@ -70,7 +70,12 @@ export function buildBundle({ seed, aggregation, version, builtAt = new Date() }
   const payload = {
     version,
     built_at: builtAt.toISOString(),
-    soft_expires_at: new Date(builtAt.getTime() + 6 * 3600e3).toISOString(),
+    // Soft freshness window: 72h (was 6h until 2026-11-22). Free configs
+    // decay over days, not hours, and until the collector phase rebuilds
+    // bundles automatically a 6h window made every shipped bundle —
+    // including the APK's first-run seed — read as stale almost at once.
+    // Clients reject a stale FETCH and flag a stale cache/seed as such.
+    soft_expires_at: new Date(builtAt.getTime() + 72 * 3600e3).toISOString(),
     sample_only: Boolean(seed.sample_only),
     configs,
   };

@@ -209,8 +209,21 @@ class AutoConnectVpnService : VpnService() {
                     break
                 }
                 AppState.bundleVersion = bundle.version
+                AppState.bundleStale = bundle.stale
                 if (bundle.sampleOnly) {
-                    AppLog.log("vpn", "WARNING: bundle is sample_only — its configs cannot really connect")
+                    // Hard stop (external audit AUD-003): a sample bundle
+                    // is test data by definition — never connect through
+                    // it as if it were live. Previously warn-only.
+                    val msg = "bundle v${bundle.version} is sample_only — refusing to connect"
+                    AppLog.log("vpn", msg)
+                    if (!stopRequested) {
+                        AppState.lastError = msg
+                        AppState.update(ConnectionPhase.FAILED, msg)
+                    }
+                    break
+                }
+                if (bundle.stale) {
+                    AppLog.log("vpn", "WARNING: bundle v${bundle.version} is past its soft expiry — using it flagged stale")
                 }
                 val ordered = orderCandidates(bundle, operator).filter { obj ->
                     val id = try {

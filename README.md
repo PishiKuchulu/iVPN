@@ -51,6 +51,8 @@ key), any `.env*.local`, or keystores. `autoconnect-backend/keys/` contains the
 
 ## Status
 
-MVP + full audit-fix wave complete; adapter suite 167/167, app JVM tests 22/22,
-`assembleDebug` green. The VPN tunnel is not yet verified on a real device.
+MVP + audit-fix waves complete; adapter suite 170/170, app JVM tests 46/46,
+parser tests 27/27, `assembleDebug` green. The VPN tunnel has connected on a
+real device (MCI, 2026-11-22); the Wi-Fi path and failover behavior still
+need more on-device testing.
 Serial/licensing (§17 of the architecture doc) is designed but deliberately not built.

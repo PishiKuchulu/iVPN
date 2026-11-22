@@ -31,6 +31,14 @@ data class Bundle(
     val sampleOnly: Boolean,
     /** Raw record objects, exactly as served. */
     val configJsonObjects: List<JsonObj>,
+    /** Producer-declared soft expiry (epoch ms), null when absent or
+     *  unparseable. Freshness only — never an authenticity signal. */
+    val softExpiresAtMs: Long? = null,
+    /** True when this bundle was verified after its soft expiry
+     *  (external audit AUD-003): a stale FETCH is rejected outright;
+     *  a stale cache/seed is still served but flagged, so the UI can
+     *  label it instead of silently trusting old configs. */
+    val stale: Boolean = false,
 )
 
 /**
@@ -68,6 +76,7 @@ class BundleClient internal constructor(
     private val fetcher: (String) -> String,
     private val publicKeyB64: String = PUBLIC_KEY_B64,
     private val seedProvider: () -> String? = { null },
+    private val nowMs: () -> Long = { System.currentTimeMillis() },
 ) {
 
     constructor(context: Context) : this(
@@ -115,6 +124,14 @@ class BundleClient internal constructor(
         return try {
             val text = fetcher(BuildConfig.BACKEND_BASE_URL + BUNDLE_PATH)
             val bundle = verifyAndParse(text)
+            // A stale FETCH is rejected (AUD-003): the producer's own
+            // freshness signal says a fresher bundle should exist; the
+            // cache/seed tiers below decide what to fall back to. The
+            // stale bundle did not advance the anti-rollback watermark
+            // (see verifyAndParse), so the older cache stays servable.
+            if (bundle.stale) {
+                throw BundleTransportException("fetched bundle v${bundle.version} is past its soft expiry")
+            }
             // Cache only AFTER successful verification.
             try {
                 cacheFile.writeText(text)
@@ -190,17 +207,48 @@ class BundleClient internal constructor(
             throw BundleException("SIGNATURE INVALID — bundle rejected")
         }
         val version = root.num("version")?.toInt() ?: throw BundleException("bundle has no version")
+        val softExpiresAtMs = root.str("soft_expires_at")?.let { parseIsoMs(it) }
+        val stale = softExpiresAtMs != null && nowMs() > softExpiresAtMs
         val last = watermark.lastBundleVersion
         if (version < last) {
             throw BundleException("bundle version rollback: got $version, already accepted $last")
         }
-        if (version > last) watermark.lastBundleVersion = version
+        // A stale bundle never advances the watermark: it is authentic
+        // but not accepted as current, and the older verified cache it
+        // falls back to must remain servable (it would otherwise read
+        // as a rollback against the stale bundle's version).
+        if (version > last && !stale) watermark.lastBundleVersion = version
         val configs = root.arr("configs")?.items?.mapNotNull { it as? JsonObj } ?: emptyList()
         return Bundle(
             version = version,
             sampleOnly = root.entries["sample_only"]?.let { (it as? autoconnect.adapter.JsonBool)?.value } ?: false,
             configJsonObjects = configs,
+            softExpiresAtMs = softExpiresAtMs,
+            stale = stale,
         )
+    }
+
+    /** Minimal ISO-8601 UTC parser for producer timestamps like
+     *  `2026-11-22T10:27:17.118Z`. SimpleDateFormat (not java.time) so
+     *  it works on minSdk 24. Unparseable → null (no freshness claim).
+     *  Fractional seconds are normalized to exactly 3 digits first:
+     *  some producers emit 6/9 digits, which the patterns reject. */
+    private fun parseIsoMs(text: String): Long? {
+        val normalized = Regex("""^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})\.(\d+)Z$""")
+            .replace(text.trim()) { m ->
+                "${m.groupValues[1]}.${m.groupValues[2].take(3).padEnd(3, '0')}Z"
+            }
+        for (pattern in arrayOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd'T'HH:mm:ss'Z'")) {
+            try {
+                val fmt = java.text.SimpleDateFormat(pattern, java.util.Locale.US)
+                fmt.timeZone = java.util.TimeZone.getTimeZone("UTC")
+                fmt.isLenient = false
+                return fmt.parse(normalized)?.time
+            } catch (_: Exception) {
+                // try the next pattern
+            }
+        }
+        return null
     }
 }
 

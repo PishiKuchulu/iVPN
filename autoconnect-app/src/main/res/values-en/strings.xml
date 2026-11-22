@@ -14,6 +14,8 @@
     <string name="connecting_label">Connecting…</string>
     <string name="stopping_label">Stopping…</string>
     <string name="bundle_label">Bundle</string>
+    <string name="bundle_stale_label">Bundle freshness</string>
+    <string name="bundle_stale_value">Stale</string>
     <string name="config_label">Config</string>
     <string name="exit_label">Exit country</string>
     <string name="error_label">Last error</string>

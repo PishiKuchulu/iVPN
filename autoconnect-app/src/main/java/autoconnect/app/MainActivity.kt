@@ -246,6 +246,13 @@ class MainActivity : BaseActivity() {
         if (AppState.bundleVersion > 0) {
             detailRow(getString(R.string.bundle_label), "v${AppState.bundleVersion}")
         }
+        if (AppState.bundleStale) {
+            detailRow(
+                getString(R.string.bundle_stale_label),
+                getString(R.string.bundle_stale_value),
+                Ui.palette(this).amber,
+            )
+        }
         AppState.currentConfigId?.let {
             detailRow(getString(R.string.config_label), it.take(24) + "…")
         }

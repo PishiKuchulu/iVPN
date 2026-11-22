@@ -15,6 +15,8 @@
     <string name="connecting_label">در حال اتصال…</string>
     <string name="stopping_label">در حال قطع…</string>
     <string name="bundle_label">نسخه بسته</string>
+    <string name="bundle_stale_label">تازگی بسته</string>
+    <string name="bundle_stale_value">قدیمی</string>
     <string name="config_label">کانفیگ</string>
     <string name="exit_label">کشور خروجی</string>
     <string name="error_label">آخرین خطا</string>
