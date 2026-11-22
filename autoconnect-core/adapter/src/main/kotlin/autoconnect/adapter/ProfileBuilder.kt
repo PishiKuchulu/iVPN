@@ -323,6 +323,19 @@ class ProfileBuilder(private val defaultMtu: Int = HardenedTemplate.DEFAULT_MTU)
             reality.str("short_id")?.let { r["short_id"] = jstr(it) }
             out["reality"] = JsonObj(r)
         }
+        // uTLS: sing-box REFUSES to initialize a REALITY client without
+        // it ("uTLS is required by reality client") — on-device test
+        // 2026-11-22: every REALITY candidate in the bundle died at
+        // outbound init for exactly this reason. Emit it whenever the
+        // record carries REALITY or an explicit fingerprint, using the
+        // record's fingerprint and defaulting to chrome.
+        val fingerprint = tls.str("fingerprint")
+        if (tls.obj("reality") != null || fingerprint != null) {
+            val u = LinkedHashMap<String, JsonValue>()
+            u["enabled"] = jbool(true)
+            u["fingerprint"] = jstr(fingerprint ?: "chrome")
+            out["utls"] = JsonObj(u)
+        }
         return JsonObj(out)
     }
 

@@ -190,6 +190,14 @@ class AutoConnectVpnService : VpnService() {
             while (!stopRequested) {
                 // ---------------- connect phase ----------------
                 AppState.operatorKey = operator
+                // A (re)start right after a disconnect waits for the old
+                // teardown to finish, so the first fetch is not routed
+                // into the dying TUN (log 2026-11-22, source 172.19.0.1).
+                var waited = 0L
+                while (teardownInProgress && !stopRequested && waited < 3_000) {
+                    Thread.sleep(100)
+                    waited += 100
+                }
                 val bundle = try {
                     BundleClient(applicationContext).fetchVerified()
                 } catch (e: Exception) {
@@ -275,8 +283,14 @@ class AutoConnectVpnService : VpnService() {
                 } catch (_: Exception) {
                 }
                 coreUp = false
+                try {
+                    tunPfd?.close()
+                } catch (_: Exception) {
+                }
+                tunPfd = null
                 running = false
                 stopForeground(STOP_FOREGROUND_REMOVE)
+                AppLog.log("vpn", "teardown complete: session ended, tun closed, service stopping")
                 stopSelf()
             }
         }
@@ -366,6 +380,7 @@ class AutoConnectVpnService : VpnService() {
             return false
         }
         for (url in PROBE_URLS) {
+            if (stopRequested) return false // a stop mid-probe ends it now, not after ~20 s of timeouts
             var conn: HttpURLConnection? = null
             try {
                 conn = URL(url).openConnection() as HttpURLConnection
@@ -383,8 +398,17 @@ class AutoConnectVpnService : VpnService() {
         return false
     }
 
+    /** Set while a stop teardown is running; a session that starts in
+     *  that window waits for the old TUN to be fully down before its
+     *  first fetch (on-device log 2026-11-22: a reconnect 2 s after
+     *  disconnect fetched through the dying TUN — source 172.19.0.1 —
+     *  and timed out). */
+    @Volatile
+    private var teardownInProgress = false
+
     private fun stopVpn() {
         stopRequested = true
+        teardownInProgress = true
         thread(name = "autoconnect-stop") {
             AppState.update(ConnectionPhase.STOPPING, "stopping")
             try {
@@ -400,6 +424,8 @@ class AutoConnectVpnService : VpnService() {
             running = false
             AppState.update(ConnectionPhase.IDLE, "stopped")
             stopForeground(STOP_FOREGROUND_REMOVE)
+            AppLog.log("vpn", "teardown complete: core stopped, tun closed, service stopping")
+            teardownInProgress = false
             stopSelf()
         }
     }

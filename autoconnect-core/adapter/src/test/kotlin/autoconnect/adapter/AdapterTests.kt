@@ -152,6 +152,15 @@ fun main() {
         check("reality: reality block present and enabled", reality?.bool("enabled") == true)
         check("reality: public_key carried", reality?.str("public_key") == "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8")
         check("reality: short_id carried", reality?.str("short_id") == "a1b2c3d4")
+        val utls = tls.obj("utls")
+        check("reality: utls present and enabled (sing-box requires it)", utls?.bool("enabled") == true)
+        check("reality: utls fingerprint from record", utls?.str("fingerprint") == "chrome")
+        run {
+            val noFp = builtObj(recordOf(BUNDLE_VLESS_REALITY.replace("\"fingerprint\":\"chrome\",", "")))
+            val noFpUtls = outboundOf(noFp, "proxy")!!.obj("tls")!!.obj("utls")
+            check("reality: utls defaults fingerprint to chrome when record has none",
+                noFpUtls?.bool("enabled") == true && noFpUtls?.str("fingerprint") == "chrome")
+        }
         expectBuildError("reality: flow outside allowlist rejects") {
             ProfileBuilder().build(recordOf(BUNDLE_VLESS_REALITY.replace("xtls-rprx-vision", "some-other-flow")))
         }
