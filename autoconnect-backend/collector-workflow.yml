@@ -1,0 +1,79 @@
+name: Collector
+
+# Automated config collector (added manually via the web UI — the GitHub App
+# used by the project assistant has no Workflows permission).
+#
+# Hourly: refresh the config pool from the Telegram sources in
+# autoconnect-backend/seed/sources.json, and when the seed changed (or the
+# live bundle is within 24h of its soft expiry) rebuild the signed bundle
+# with the KV client-report aggregation and commit it back. Vercel deploys
+# the new bundle from the push. [skip ci] keeps the APK build workflow from
+# firing on these data-only commits.
+#
+# Required repository secrets (values live in the Vercel project):
+#   KV_REST_API_URL, KV_REST_API_TOKEN   (Storage -> autoconnect-kv)
+#   BUNDLE_SIGNING_PRIVATE_KEY_B64       (Settings -> Environment Variables)
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collector
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Collect configs from sources
+        run: python3 autoconnect-backend/scripts/collect.py
+
+      - name: Decide whether a rebuild is needed
+        id: decide
+        run: |
+          SEED_CHANGED=$(git status --porcelain -- autoconnect-backend/seed/ | wc -l)
+          EXPIRING=$(node -e "const b=require('./autoconnect-backend/data/bundle.json'); const left=(new Date(b.soft_expires_at)-Date.now())/3600e3; console.log(left < 24 ? '1' : '0')")
+          echo "seed_changed=$SEED_CHANGED expiring=$EXPIRING"
+          if [ "$SEED_CHANGED" -gt 0 ] || [ "$EXPIRING" = "1" ]; then
+            echo "rebuild=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "rebuild=0" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build signed bundle (KV aggregation)
+        if: steps.decide.outputs.rebuild == '1'
+        env:
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+          BUNDLE_SIGNING_PRIVATE_KEY_B64: ${{ secrets.BUNDLE_SIGNING_PRIVATE_KEY_B64 }}
+        run: node autoconnect-backend/scripts/build-bundle.mjs
+
+      - name: Verify bundle signature
+        if: steps.decide.outputs.rebuild == '1'
+        run: node autoconnect-backend/scripts/verify-bundle.mjs
+
+      - name: Commit and push if changed
+        if: steps.decide.outputs.rebuild == '1'
+        run: |
+          git config user.name "autoconnect-collector"
+          git config user.email "collector@localhost"
+          git add autoconnect-backend/seed/configs.json autoconnect-backend/seed/pool.json autoconnect-backend/seed/sources autoconnect-backend/data/bundle.json
+          if git diff --cached --quiet; then
+            echo "no changes to commit"
+            exit 0
+          fi
+          VERSION=$(node -p "require('./autoconnect-backend/data/bundle.json').version")
+          git commit -m "collector: bundle v${VERSION} [skip ci]"
+          git push

@@ -1,455 +1,973 @@
 {
- "sample_only": false,
- "configs": [
-  {
-   "credential": "cb73ec56-1faa-491d-b2eb-8edec2e4b12e",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:57b8548d13cdc8b2518bbc2d3a5462537ea7c2fac82192b95ec0cd9a641c8b2b",
-   "operator_scores": {},
-   "port": 8443,
-   "protocol": "vless",
-   "server": "188.225.75.52",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "qq",
-    "reality": {
-     "enabled": true,
-     "public_key": "4_mdROaBWtpQEmgXNbbwO2QzB4gwUYSFnLF3yx7w62I",
-     "short_id": "be28922db425c596"
+  "configs": [
+    {
+      "credential": "cb73ec56-1faa-491d-b2eb-8edec2e4b12e",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:57b8548d13cdc8b2518bbc2d3a5462537ea7c2fac82192b95ec0cd9a641c8b2b",
+      "operator_scores": {},
+      "port": 8443,
+      "protocol": "vless",
+      "server": "188.225.75.52",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "qq",
+        "reality": {
+          "enabled": true,
+          "public_key": "4_mdROaBWtpQEmgXNbbwO2QzB4gwUYSFnLF3yx7w62I",
+          "short_id": "be28922db425c596"
+        },
+        "sni": "agent.mperialbank.xyz"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
     },
-    "sni": "agent.mperialbank.xyz"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "ee0a6b97-4dc1-4a38-8b16-95a42c917158",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:841941c8558773f6efdfd6bd3d65926185e0eae1f1725912ab6fa15b2e01a7e0",
-   "operator_scores": {},
-   "port": 443,
-   "protocol": "vless",
-   "server": "37.143.131.52",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "firefox",
-    "reality": {
-     "enabled": true,
-     "public_key": "1TtWNQhTJr_3H7-ypMw4EiLzVxy22AzUtMiE5JmQMl4",
-     "short_id": "1c5869a95671bcb0"
+    {
+      "credential": "ee0a6b97-4dc1-4a38-8b16-95a42c917158",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:841941c8558773f6efdfd6bd3d65926185e0eae1f1725912ab6fa15b2e01a7e0",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "37.143.131.52",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "firefox",
+        "reality": {
+          "enabled": true,
+          "public_key": "1TtWNQhTJr_3H7-ypMw4EiLzVxy22AzUtMiE5JmQMl4",
+          "short_id": "1c5869a95671bcb0"
+        },
+        "sni": "ch-zrh1.connect.accessboy.com"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
     },
-    "sni": "ch-zrh1.connect.accessboy.com"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "920b3cd9-4f82-4669-bbd2-d4a28b9052c6",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:e6ccde166803f48e8a35ea92ec3f15b481968f6eca007fbcc9e122bf3191a233",
-   "operator_scores": {},
-   "port": 9543,
-   "protocol": "vless",
-   "server": "132.243.242.115",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "safari",
-    "reality": {
-     "enabled": true,
-     "public_key": "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc",
-     "short_id": "123abcdf"
+    {
+      "credential": "920b3cd9-4f82-4669-bbd2-d4a28b9052c6",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:e6ccde166803f48e8a35ea92ec3f15b481968f6eca007fbcc9e122bf3191a233",
+      "operator_scores": {},
+      "port": 9543,
+      "protocol": "vless",
+      "server": "132.243.242.115",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "safari",
+        "reality": {
+          "enabled": true,
+          "public_key": "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc",
+          "short_id": "123abcdf"
+        },
+        "sni": "storage.yandexcloud.net"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?Telegram---PLANB_NET---PLANB_NET---PLANB_NET---PLANB_NET",
+        "type": "tcp"
+      }
     },
-    "sni": "storage.yandexcloud.net"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "host": "/?Telegram---PLANB_NET---PLANB_NET---PLANB_NET---PLANB_NET",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "b9bfa54d-bc44-4592-a6d6-89a9665d286f",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:05acd78df6f65e97b21fb64186552a6d866dac4e872f0d94a3d4cee2561c7388",
-   "operator_scores": {},
-   "port": 443,
-   "protocol": "vless",
-   "server": "9.247.23.209",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "chrome",
-    "reality": {
-     "enabled": true,
-     "public_key": "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
+    {
+      "credential": "b9bfa54d-bc44-4592-a6d6-89a9665d286f",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:05acd78df6f65e97b21fb64186552a6d866dac4e872f0d94a3d4cee2561c7388",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "9.247.23.209",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc"
+        },
+        "sni": "mother-earth.fyi"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
     },
-    "sni": "mother-earth.fyi"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "6d30952e-e4f8-4e87-b66b-eecc9c90d2fd",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:3b26ddf7eca2323754d51777b1d5a798a0b83384c5131a1c6751f20d8644089b",
-   "operator_scores": {},
-   "port": 443,
-   "protocol": "vless",
-   "server": "2a03:90c0:382:1::6b",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "chrome",
-    "reality": {
-     "enabled": true,
-     "public_key": "6dc3iKXilOQpA_JFrKlk5-CsFjSmOm_5p0kSQcO9qi4"
+    {
+      "credential": "6d30952e-e4f8-4e87-b66b-eecc9c90d2fd",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:3b26ddf7eca2323754d51777b1d5a798a0b83384c5131a1c6751f20d8644089b",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "2a03:90c0:382:1::6b",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "6dc3iKXilOQpA_JFrKlk5-CsFjSmOm_5p0kSQcO9qi4"
+        }
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "6d622d0d-2572-456a-8daf-b2f01698aa37",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:2f1126c99322737b8b486d06e758e30ba93c9f0cfab9f7146b8dbde34f2901f8",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "135.106.175.19",
+      "source_count": 2,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "safari",
+        "reality": {
+          "enabled": true,
+          "public_key": "102QGNfisDfTEw5BcC0u61i6mY6UFcZ2qCMJzNxDtXc"
+        },
+        "sni": "roshia.anime-together.club"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "6ae5e517-c618-4ff6-9d71-8b717507221a",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:f5abaea8a41c5f0ad72ded1b8e639dfd9ddc9aea2e21e5b0363822da65d9caa6",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "162.216.231.214",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "iQCvXMQZR-eT2MVmXP7c99cvcle22mVWuKem_345BWM"
+        },
+        "sni": "rss.worldoftanks.eu"
+      },
+      "transport": {
+        "host": "rss.worldoftanks.eu",
+        "path": "/",
+        "type": "splithttp"
+      }
+    },
+    {
+      "credential": "6ae5e517-c618-4ff6-9d71-8b717507221a",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:c329d47c880dfcb58f50457b9c9be6d4432219054d40871277fab30fc1a1e5f9",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "coughed-gongs.freevideochats.org",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "iQCvXMQZR-eT2MVmXP7c99cvcle22mVWuKem_345BWM"
+        },
+        "sni": "rss.worldoftanks.eu"
+      },
+      "transport": {
+        "host": "rss.worldoftanks.eu",
+        "path": "/",
+        "type": "splithttp"
+      }
+    },
+    {
+      "credential": "6ae5e517-c618-4ff6-9d71-8b717507221a",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:6a549329fc98552c9fa9b2a8c1f180e4623f40affd456a68d4635e4384dce0bd",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "87.120.106.95",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "iQCvXMQZR-eT2MVmXP7c99cvcle22mVWuKem_345BWM"
+        },
+        "sni": "lockheart.info"
+      },
+      "transport": {
+        "host": "lockheart.info",
+        "path": "/",
+        "type": "splithttp"
+      }
+    },
+    {
+      "credential": "e73df646-1f62-41bf-8c50-653497d603d0",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:0475b80544efc2ecc731c0794f3656940aedd89e353e024c42e3c5783ccb1aae",
+      "operator_scores": {},
+      "port": 80,
+      "protocol": "vless",
+      "server": "sc-thenetherlands2.09vpn.com",
+      "source_count": 1,
+      "tls": {
+        "enabled": false
+      },
+      "transport": {
+        "host": "SC-TheNetherlands2.09vpn.com",
+        "path": "/vless/",
+        "type": "ws"
+      }
+    },
+    {
+      "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:2e28556a7f581b26c008152b7fa9366eb0e84b62bc8fd2e3240d69a94de04862",
+      "operator_scores": {},
+      "port": 23576,
+      "protocol": "vless",
+      "server": "51.158.206.29",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "firefox",
+        "reality": {
+          "enabled": true,
+          "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+          "short_id": "01"
+        },
+        "sni": "fuck.rkn"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:3228303b5c740edcc3ed33615f367a6d75143e5092f8232375092e6015c7078f",
+      "operator_scores": {},
+      "port": 23576,
+      "protocol": "vless",
+      "server": "51.158.206.103",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "reality": {
+          "enabled": true,
+          "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+          "short_id": "01"
+        },
+        "sni": "fuck.rkn"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "47fcef29-ab4e-4aa6-932b-d95a18f28a4e",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:fb6fd82e088bce40ae539f4d742c9036833dc291d10051ba5f93e54a7463a6e1",
+      "operator_scores": {},
+      "port": 2082,
+      "protocol": "vless",
+      "server": "104.18.46.234",
+      "source_count": 1,
+      "tls": {
+        "enabled": false
+      },
+      "transport": {
+        "host": "8nj2r.2k8t.f88.hh.vavava.kdns.fr",
+        "path": "/?ed=2560security=tls",
+        "type": "ws"
+      }
+    },
+    {
+      "credential": "79105268-2a3f-4b02-a299-839c8919b365",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:20c8e1c4b2f5ba2a3ea1b272f1be937727fbf0e8a40fee7a9e511d9e322860e1",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "199.232.129.192",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "firefox",
+        "sni": "cdn.akamai.steamstatic.com"
+      },
+      "transport": {
+        "host": "my-brankkkkd.global.ssl.fastly.net",
+        "path": "/",
+        "type": "splithttp"
+      }
+    },
+    {
+      "credential": "a346c521-7a7f-452b-9356-a4893feb5982",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:1277e797ddf0ff637295ec7a66be60378b443e4019aa8d7751f9f5c352288eb0",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "93.123.101.198",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "reality": {
+          "enabled": true,
+          "public_key": "FWitre1jinQR7qz5HQ0q2Q4Gg9xA9B0SyizCziN7Ch0"
+        },
+        "sni": "de14-r.bankai.party"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "920b3cd9-4f82-4669-bbd2-d4a28b9052c6",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:2a04e6ee1dcd5b39662e8aec574ed3bd33da5ce86055806443ea6ad9373508d2",
+      "operator_scores": {},
+      "port": 9543,
+      "protocol": "vless",
+      "server": "146.103.43.91",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "reality": {
+          "enabled": true,
+          "public_key": "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc",
+          "short_id": "123abcdf"
+        },
+        "sni": "storage.yandexcloud.net"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:325e803a0779177293d1930a289fdfa1c2f1646e8c7a8fb15299b430f8191432",
+      "operator_scores": {},
+      "port": 18000,
+      "protocol": "vmess",
+      "server": "67.220.95.3",
+      "source_count": 2,
+      "tls": {
+        "enabled": false
+      },
+      "transport": {
+        "path": "/",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:7bd96db73dfbc199c7e014cb97ddbc142825415c827bd0a96ab2ed793939e5f3",
+      "operator_scores": {},
+      "port": 23576,
+      "protocol": "vless",
+      "server": "62.210.91.10",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "reality": {
+          "enabled": true,
+          "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+          "short_id": "01"
+        },
+        "sni": "fuck.rkn"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:5bf47a4bee06779a09791da9f0237cb97d2a59b79562886abe3c6199cce9f579",
+      "operator_scores": {},
+      "port": 23576,
+      "protocol": "vless",
+      "server": "15.204.97.214",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "random",
+        "reality": {
+          "enabled": true,
+          "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
+        },
+        "sni": "fuck.rkn"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "14c80e0e-f7ce-4991-94fc-99a1db4a9b1e",
+      "first_seen": "2026-11-23T12:20:52Z",
+      "id": "sha256:b3a29f321513ee9c27aa59185d2e34fc27f32181eaf1cae9fcd953b248030d35",
+      "operator_scores": {},
+      "port": 28190,
+      "protocol": "vless",
+      "server": "159.89.87.21",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "ZJRnFU-1s1JOnO8E9uZ7b00l1fPEh63fGRbdBANFRno"
+        },
+        "sni": "aws.amazon.com"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "2ed34e7c-45c5-4e0e-bcab-42fe99a7bd25",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:a05b56c25bec1cb1f39e45588ef994bc9eac404dde66cd48b8ff390defd03d3e",
+      "operator_scores": {},
+      "port": 8443,
+      "protocol": "vless",
+      "server": "48.103.133.47",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "firefox",
+        "reality": {
+          "enabled": true,
+          "public_key": "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc",
+          "short_id": "6ba85179e30d4fc2"
+        },
+        "sni": "apple.com"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "88e79aa6-f431-4453-8dcc-652a0c747198",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:ed4dee30e4caf3c7d146939bc20e5f2ecc8003f3817013a63c21e14bb78db05c",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "88.216.70.125",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "firefox",
+        "sni": "o685y.save-node.com"
+      },
+      "transport": {
+        "host": "o685y.save-node.com",
+        "path": "/api/se1k2rfxlsuer3ry4u6e84kl8rqp721p",
+        "type": "ws"
+      }
+    },
+    {
+      "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:00614a651c6f730947d20653aa6f0ef8d3dc8b82a410452cfc2cf091196473f6",
+      "operator_scores": {},
+      "port": 23576,
+      "protocol": "vless",
+      "server": "51.158.206.25",
+      "source_count": 2,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "firefox",
+        "reality": {
+          "enabled": true,
+          "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+          "short_id": "01"
+        },
+        "sni": "fuck.rkn"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:21dc60bded7e7f260de9e26fb67c835d3717fd8302ed65483eef80071dc230d3",
+      "operator_scores": {},
+      "port": 23576,
+      "protocol": "vless",
+      "server": "51.158.206.80",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+          "short_id": "01"
+        },
+        "sni": "fuck.rkn"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?TELEGRAM---MARAMBASHI---MARAMBASHI---MARAMBASHI---MARAMBASHI",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:0b79fbac1e5246ce5a254c41984d2da71f3a012502bb54907020a8171a3cce44",
+      "operator_scores": {},
+      "port": 23576,
+      "protocol": "vless",
+      "server": "51.158.206.20",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "firefox",
+        "reality": {
+          "enabled": true,
+          "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+          "short_id": "01"
+        },
+        "sni": "fuck.rkn"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:c7905b0b86f96a10c5779b7cd654ba5ed9fb09aea74b178671d94b16fef619d3",
+      "operator_scores": {},
+      "port": 23576,
+      "protocol": "vless",
+      "server": "51.158.206.96",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "reality": {
+          "enabled": true,
+          "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+          "short_id": "01"
+        },
+        "sni": "fuck.rkn"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "bc058e69-0444-4c7b-98da-bd67f0b143da",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:4fe96cc8e1172132d79c78442c77837b44630f0b0f561bdfd647dec53ce8a34a",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "130.12.242.106",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "vnjp7zIK2H3CGdjSis_79KXqS6IG-opmpbETPUD-EC8",
+          "short_id": "15affa0af66dfc79"
+        },
+        "sni": "deepl.com"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "d65cc14c-f53f-4fe2-b262-97856601319c",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:eb2e80b484f4b083ab88a70c40431a33dcaa764e3f9b7e9673fa3977664450c8",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "169.40.42.89",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg",
+          "short_id": "c39cc7310a"
+        },
+        "sni": "yahoo.com"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "a346c521-7a7f-452b-9356-a4893feb5982",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:144be9aadab34439b2e336c4794e5f8e85c303ab17403b2fdf103051dc5e3fcd",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "48.103.231.2",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "reality": {
+          "enabled": true,
+          "public_key": "FWitre1jinQR7qz5HQ0q2Q4Gg9xA9B0SyizCziN7Ch0",
+          "short_id": "457fab2ac885dbe0"
+        },
+        "sni": "ee1-r.bankai.party"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:34da42ff2d3e23c7095f505d431de8b70888491b9d2be104c77cad115b07bc45",
+      "operator_scores": {},
+      "port": 23576,
+      "protocol": "vless",
+      "server": "51.158.206.97",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+          "short_id": "01"
+        },
+        "sni": "fuck.rkn"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?Telegram—V2ray_confiig",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:69d1d7df1d4fe95b646523efc179eb221c25c79a88973b7d45e1c88dcdb45e88",
+      "operator_scores": {},
+      "port": 23576,
+      "protocol": "vless",
+      "server": "62.210.91.10",
+      "source_count": 2,
+      "tls": {
+        "enabled": true,
+        "reality": {
+          "enabled": true,
+          "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+          "short_id": "01"
+        },
+        "sni": "fuck.rkn"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?TELEGRAM---MARAMBASHI---MARAMBASHI---MARAMBASHI---MARAMBASHI",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "fb762698-974e-4584-859f-89b5755caa9e",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:ee39cc9a4beb505c40cc0417ed47c7762421676b1119a022be09964cbe234748",
+      "operator_scores": {},
+      "port": 12146,
+      "protocol": "vmess",
+      "server": "rma2.rmaaccshop.ir",
+      "source_count": 1,
+      "tls": {
+        "enabled": false
+      },
+      "transport": {
+        "host": "rma4.rmaaccshop.ir",
+        "path": "/rma",
+        "type": "ws"
+      }
+    },
+    {
+      "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:e4ae0335bb07d13630e5898bf7c62f1cb08691f3766fdc74ed96cce1143aed10",
+      "operator_scores": {},
+      "port": 23576,
+      "protocol": "vless",
+      "server": "51.158.206.93",
+      "source_count": 2,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+          "short_id": "01"
+        },
+        "sni": "fuck.rkn"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?TELEGRAM---MARAMBASHI---MARAMBASHI---MARAMBASHI---MARAMBASHI",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "2ae0670d-0bdf-409e-9a55-4e970252d378",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:0c2295975cbd2d9e920680685258e27b9287c64f70b529e57f82dada92867767",
+      "operator_scores": {},
+      "port": 8443,
+      "protocol": "vless",
+      "server": "37.235.247.81",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "reality": {
+          "enabled": true,
+          "public_key": "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc",
+          "short_id": "6ba85179e30d4fc2"
+        },
+        "sni": "apple.com"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "920b3cd9-4f82-4669-bbd2-d4a28b9052c6",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:07d08da8e9106eab3c9c307283e6d2ac040681e096f6d17b022da0045ad57ab8",
+      "operator_scores": {},
+      "port": 9543,
+      "protocol": "vless",
+      "server": "132.243.242.115",
+      "source_count": 2,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "safari",
+        "reality": {
+          "enabled": true,
+          "public_key": "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc",
+          "short_id": "123abcdf"
+        },
+        "sni": "storage.yandexcloud.net"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?TELEGRAM---MARAMBASHI---MARAMBASHI---MARAMBASHI---MARAMBASHI",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "b81b4d1b-7f20-48f1-82dc-d24bef898cab",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:cc86a26a35079f44422288d0f1711b9c800439a80f299c2cdded2b523f17d3cf",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "161.97.160.224",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "33zaT3jHXjtynSQ0Ucw9bK92-XH2zolJmuIeZ1XyZB0",
+          "short_id": "e6"
+        },
+        "sni": "passport.yandex.ru"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "d65cc14c-f53f-4fe2-b262-97856601319c",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:05267f9851074377e29b7c57bde92550171c83f8a931ac0801cf456d7bd896a7",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "169.40.42.168",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg",
+          "short_id": "c39cc7310a"
+        },
+        "sni": "yahoo.com"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "host": "/?TELEGRAM---MARAMBASHI---MARAMBASHI---MARAMBASHI---MARAMBASHI",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "75113671-63e3-452d-87d3-261a37e8b472",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:cbd65faab527e5a51b4579a0251b15dfafc60221047e444dfb67bd9b318e6a91",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "webdisk.jaggyslawa.org",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "random",
+        "reality": {
+          "enabled": true,
+          "public_key": "zfsjt2A8ur0qHWIuCG7F9W4wZN3VTuL6fkTljC-9R0s",
+          "short_id": "baf023e1026a"
+        },
+        "sni": "www.mozilla.org"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "ef5a57c7-84d5-4f86-b99c-875a16da485f",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:6f8491c7b0267fc1d164a932e9a7a9b2f427fef094417a2715a89250a69ab505",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "176.108.243.24",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "firefox",
+        "reality": {
+          "enabled": true,
+          "public_key": "QMPA4RVilYFEnDrbdj93up66oDk5I_btjil9vC7ppgc",
+          "short_id": "9e5b8e221733245f"
+        },
+        "sni": "sbmicro740.gangtype.com"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "ef5a57c7-84d5-4f86-b99c-875a16da485f",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:72a45012b390c01ccc61519a996f1bf847c40ce2ac295fa3f5700306285f8103",
+      "operator_scores": {},
+      "port": 444,
+      "protocol": "vless",
+      "server": "48.102.173.24",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "firefox",
+        "sni": "neplay603.gangtype.com"
+      },
+      "transport": {
+        "host": "neplay603.gangtype.com",
+        "path": "/stream/updates/a66d7902",
+        "type": "ws"
+      }
+    },
+    {
+      "credential": "da39704f-79b2-460e-b77f-8d12397b3112",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:c1501d5689c9735d119c3ec362c6a982d26a4901432c39a2bf0ff03d6c88e637",
+      "operator_scores": {},
+      "port": 443,
+      "protocol": "vless",
+      "server": "43.110.39.161",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "OsXk2qNUNsQsjMHAx6z6GdVflb0gD5AI8izM5W_J_00",
+          "short_id": "db9af76e455811d0"
+        },
+        "sni": "www.apple.com"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
+    },
+    {
+      "credential": "ead3595f-4020-4e76-a3ec-c248e1a2f2f7",
+      "first_seen": "2026-11-23T12:29:45Z",
+      "id": "sha256:3a9f2497d70291f64b6f18c7d202003491aebdd96210de8cdbf50d200d288fdd",
+      "operator_scores": {},
+      "port": 19482,
+      "protocol": "vless",
+      "server": "free.fugui.lol",
+      "source_count": 1,
+      "tls": {
+        "enabled": true,
+        "fingerprint": "chrome",
+        "reality": {
+          "enabled": true,
+          "public_key": "IjWYbHNrZb3UCQxsTJyekEOA3tHq42L6Jw3O8MmLYVQ",
+          "short_id": "fa514b83"
+        },
+        "sni": "swdist.apple.com"
+      },
+      "transport": {
+        "flow": "xtls-rprx-vision",
+        "type": "tcp"
+      }
     }
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "6d622d0d-2572-456a-8daf-b2f01698aa37",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:2f1126c99322737b8b486d06e758e30ba93c9f0cfab9f7146b8dbde34f2901f8",
-   "operator_scores": {},
-   "port": 443,
-   "protocol": "vless",
-   "server": "135.106.175.19",
-   "source_count": 2,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "safari",
-    "reality": {
-     "enabled": true,
-     "public_key": "102QGNfisDfTEw5BcC0u61i6mY6UFcZ2qCMJzNxDtXc"
-    },
-    "sni": "roshia.anime-together.club"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "6ae5e517-c618-4ff6-9d71-8b717507221a",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:f5abaea8a41c5f0ad72ded1b8e639dfd9ddc9aea2e21e5b0363822da65d9caa6",
-   "operator_scores": {},
-   "port": 443,
-   "protocol": "vless",
-   "server": "162.216.231.214",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "chrome",
-    "reality": {
-     "enabled": true,
-     "public_key": "iQCvXMQZR-eT2MVmXP7c99cvcle22mVWuKem_345BWM"
-    },
-    "sni": "rss.worldoftanks.eu"
-   },
-   "transport": {
-    "host": "rss.worldoftanks.eu",
-    "path": "/",
-    "type": "splithttp"
-   }
-  },
-  {
-   "credential": "6ae5e517-c618-4ff6-9d71-8b717507221a",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:c329d47c880dfcb58f50457b9c9be6d4432219054d40871277fab30fc1a1e5f9",
-   "operator_scores": {},
-   "port": 443,
-   "protocol": "vless",
-   "server": "coughed-gongs.freevideochats.org",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "chrome",
-    "reality": {
-     "enabled": true,
-     "public_key": "iQCvXMQZR-eT2MVmXP7c99cvcle22mVWuKem_345BWM"
-    },
-    "sni": "rss.worldoftanks.eu"
-   },
-   "transport": {
-    "host": "rss.worldoftanks.eu",
-    "path": "/",
-    "type": "splithttp"
-   }
-  },
-  {
-   "credential": "6ae5e517-c618-4ff6-9d71-8b717507221a",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:6a549329fc98552c9fa9b2a8c1f180e4623f40affd456a68d4635e4384dce0bd",
-   "operator_scores": {},
-   "port": 443,
-   "protocol": "vless",
-   "server": "87.120.106.95",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "chrome",
-    "reality": {
-     "enabled": true,
-     "public_key": "iQCvXMQZR-eT2MVmXP7c99cvcle22mVWuKem_345BWM"
-    },
-    "sni": "lockheart.info"
-   },
-   "transport": {
-    "host": "lockheart.info",
-    "path": "/",
-    "type": "splithttp"
-   }
-  },
-  {
-   "credential": "e73df646-1f62-41bf-8c50-653497d603d0",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:0475b80544efc2ecc731c0794f3656940aedd89e353e024c42e3c5783ccb1aae",
-   "operator_scores": {},
-   "port": 80,
-   "protocol": "vless",
-   "server": "sc-thenetherlands2.09vpn.com",
-   "source_count": 1,
-   "tls": {
-    "enabled": false
-   },
-   "transport": {
-    "host": "SC-TheNetherlands2.09vpn.com",
-    "path": "/vless/",
-    "type": "ws"
-   }
-  },
-  {
-   "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:2e28556a7f581b26c008152b7fa9366eb0e84b62bc8fd2e3240d69a94de04862",
-   "operator_scores": {},
-   "port": 23576,
-   "protocol": "vless",
-   "server": "51.158.206.29",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "firefox",
-    "reality": {
-     "enabled": true,
-     "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
-     "short_id": "01"
-    },
-    "sni": "fuck.rkn"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:3228303b5c740edcc3ed33615f367a6d75143e5092f8232375092e6015c7078f",
-   "operator_scores": {},
-   "port": 23576,
-   "protocol": "vless",
-   "server": "51.158.206.103",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "reality": {
-     "enabled": true,
-     "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
-     "short_id": "01"
-    },
-    "sni": "fuck.rkn"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "47fcef29-ab4e-4aa6-932b-d95a18f28a4e",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:fb6fd82e088bce40ae539f4d742c9036833dc291d10051ba5f93e54a7463a6e1",
-   "operator_scores": {},
-   "port": 2082,
-   "protocol": "vless",
-   "server": "104.18.46.234",
-   "source_count": 1,
-   "tls": {
-    "enabled": false
-   },
-   "transport": {
-    "host": "8nj2r.2k8t.f88.hh.vavava.kdns.fr",
-    "path": "/?ed=2560security=tls",
-    "type": "ws"
-   }
-  },
-  {
-   "credential": "79105268-2a3f-4b02-a299-839c8919b365",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:20c8e1c4b2f5ba2a3ea1b272f1be937727fbf0e8a40fee7a9e511d9e322860e1",
-   "operator_scores": {},
-   "port": 443,
-   "protocol": "vless",
-   "server": "199.232.129.192",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "firefox",
-    "sni": "cdn.akamai.steamstatic.com"
-   },
-   "transport": {
-    "host": "my-brankkkkd.global.ssl.fastly.net",
-    "path": "/",
-    "type": "splithttp"
-   }
-  },
-  {
-   "credential": "a346c521-7a7f-452b-9356-a4893feb5982",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:1277e797ddf0ff637295ec7a66be60378b443e4019aa8d7751f9f5c352288eb0",
-   "operator_scores": {},
-   "port": 443,
-   "protocol": "vless",
-   "server": "93.123.101.198",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "reality": {
-     "enabled": true,
-     "public_key": "FWitre1jinQR7qz5HQ0q2Q4Gg9xA9B0SyizCziN7Ch0"
-    },
-    "sni": "de14-r.bankai.party"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "920b3cd9-4f82-4669-bbd2-d4a28b9052c6",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:2a04e6ee1dcd5b39662e8aec574ed3bd33da5ce86055806443ea6ad9373508d2",
-   "operator_scores": {},
-   "port": 9543,
-   "protocol": "vless",
-   "server": "146.103.43.91",
-   "source_count": 2,
-   "tls": {
-    "enabled": true,
-    "reality": {
-     "enabled": true,
-     "public_key": "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc",
-     "short_id": "123abcdf"
-    },
-    "sni": "storage.yandexcloud.net"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:325e803a0779177293d1930a289fdfa1c2f1646e8c7a8fb15299b430f8191432",
-   "operator_scores": {},
-   "port": 18000,
-   "protocol": "vmess",
-   "server": "67.220.95.3",
-   "source_count": 2,
-   "tls": {
-    "enabled": false
-   },
-   "transport": {
-    "path": "/",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:7bd96db73dfbc199c7e014cb97ddbc142825415c827bd0a96ab2ed793939e5f3",
-   "operator_scores": {},
-   "port": 23576,
-   "protocol": "vless",
-   "server": "62.210.91.10",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "reality": {
-     "enabled": true,
-     "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
-     "short_id": "01"
-    },
-    "sni": "fuck.rkn"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "host": "/?",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:5bf47a4bee06779a09791da9f0237cb97d2a59b79562886abe3c6199cce9f579",
-   "operator_scores": {},
-   "port": 23576,
-   "protocol": "vless",
-   "server": "15.204.97.214",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "random",
-    "reality": {
-     "enabled": true,
-     "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s"
-    },
-    "sni": "fuck.rkn"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "host": "/?",
-    "type": "tcp"
-   }
-  },
-  {
-   "credential": "14c80e0e-f7ce-4991-94fc-99a1db4a9b1e",
-   "first_seen": "2026-11-23T12:20:52Z",
-   "id": "sha256:b3a29f321513ee9c27aa59185d2e34fc27f32181eaf1cae9fcd953b248030d35",
-   "operator_scores": {},
-   "port": 28190,
-   "protocol": "vless",
-   "server": "159.89.87.21",
-   "source_count": 1,
-   "tls": {
-    "enabled": true,
-    "fingerprint": "chrome",
-    "reality": {
-     "enabled": true,
-     "public_key": "ZJRnFU-1s1JOnO8E9uZ7b00l1fPEh63fGRbdBANFRno"
-    },
-    "sni": "aws.amazon.com"
-   },
-   "transport": {
-    "flow": "xtls-rprx-vision",
-    "host": "/?",
-    "type": "tcp"
-   }
-  }
- ]
+  ],
+  "sample_only": false
 }

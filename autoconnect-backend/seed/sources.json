@@ -1,0 +1,1 @@
+{"comment":"Collector sources. Only share-link channels are usable: the parser consumes vless/vmess/trojan/ss links from the public t.me/s web view. File-attachment channels (e.g. .ovpn/.conf) cannot be read from the web view and are not supported. Add a channel by adding one entry.","sources":[{"id":"chillguy_vpn","type":"telegram-web","url":"https://t.me/s/chillguy_vpn"}]}
