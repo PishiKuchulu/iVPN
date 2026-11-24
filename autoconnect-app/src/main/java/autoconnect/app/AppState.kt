@@ -28,6 +28,26 @@ object AppState {
     @Volatile
     var currentConfigId: String? = null
 
+    /** In-app leak check results for the current session (2026-11-24).
+     *  Null always means "not measured / unknown" — the details card
+     *  labels unknowns as unknown, never as safe or as leaking. */
+    @Volatile
+    var leakExitIp: String? = null
+
+    /** True = exit IP equals the pre-tunnel baseline (leak);
+     *  false = exit differs (tunnel is carrying us); null = unknown. */
+    @Volatile
+    var leakDetected: Boolean? = null
+
+    /** True = the VPN network resolves only through the imposed DNS
+     *  servers; false = a foreign DNS server is present. */
+    @Volatile
+    var leakDnsOk: Boolean? = null
+
+    /** True = a default IPv6 route is captured by the tunnel. */
+    @Volatile
+    var leakV6Ok: Boolean? = null
+
     @Volatile
     var lastError: String? = null
 

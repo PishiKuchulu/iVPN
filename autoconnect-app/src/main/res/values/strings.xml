@@ -46,4 +46,10 @@
     <string name="copy_log">کپی لاگ</string>
     <string name="log_copied">لاگ کپی شد</string>
     <string name="log_empty">هنوز رویدادی ثبت نشده است.</string>
+    <string name="leak_ip_label">آی‌پی خروجی</string>
+    <string name="leak_dns_label">نشت DNS</string>
+    <string name="leak_v6_label">نشت IPv6</string>
+    <string name="leak_value_ok">سالم</string>
+    <string name="leak_value_risk">نشت دارد</string>
+    <string name="leak_value_unknown">نامشخص</string>
 </resources>

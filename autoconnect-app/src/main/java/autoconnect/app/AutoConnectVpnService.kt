@@ -16,6 +16,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.VpnService
 import android.os.ParcelFileDescriptor
+import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Locale
@@ -237,7 +238,18 @@ class AutoConnectVpnService : VpnService() {
                 if (bundle.stale) {
                     AppLog.log("vpn", "WARNING: bundle v${bundle.version} is past its soft expiry — using it flagged stale")
                 }
-                val ordered = orderCandidates(bundle, operator).filter { obj ->
+                // Leak-check baseline: the address the world sees on
+                // the underlying network, measured BEFORE any tunnel
+                // exists this cycle (once the TUN is up, this process
+                // cannot be trusted to measure the direct path — the
+                // test-#3 lesson). A side thread, so a slow echo never
+                // delays the connect; failure leaves it null and the
+                // verdict becomes UNKNOWN, never a false leak.
+                val baselineIp = java.util.concurrent.atomic.AtomicReference<String?>(null)
+                val baselineThread = thread(name = "autoconnect-leak-baseline") {
+                    baselineIp.set(fetchTraceIp(null))
+                }
+                val ordered = orderCandidates(bundle, operator, historyStore.snapshot()).filter { obj ->
                     val id = try {
                         val r = ConfigRecord.fromJson(obj)
                         r.id ?: r.computedId()
@@ -267,6 +279,14 @@ class AutoConnectVpnService : VpnService() {
                     break
                 }
 
+                // In-app leak check for this session (async; results
+                // land in AppState for the details card).
+                AppState.leakExitIp = null
+                AppState.leakDetected = null
+                AppState.leakDnsOk = null
+                AppState.leakV6Ok = null
+                thread(name = "autoconnect-leak-check") { runLeakCheck(baselineThread, baselineIp) }
+
                 // ---------------- monitor phase (§8.4) ----------------
                 val connectedAt = System.currentTimeMillis()
                 when (monitorLoop()) {
@@ -283,6 +303,7 @@ class AutoConnectVpnService : VpnService() {
                     MonitorOutcome.DIED -> {
                         val elapsedMs = (System.currentTimeMillis() - connectedAt).toInt()
                         reports.queue(connectedId, operator, "connected", elapsedMs, "fail")
+                        historyStore.record(connectedId, false, System.currentTimeMillis())
                         deadIds.add(connectedId)
                         val now = System.currentTimeMillis()
                         while (!switchTimes.isEmpty() && now - switchTimes.first() > SWITCH_WINDOW_MS) {
@@ -363,6 +384,7 @@ class AutoConnectVpnService : VpnService() {
             val handshakeMs = (System.currentTimeMillis() - startedAt).toInt()
             AppLog.log("vpn", "CONNECTED via $configId in ${handshakeMs}ms op=$operator")
             reports.queue(configId, operator, "connected", handshakeMs, "success")
+            historyStore.record(configId, true, System.currentTimeMillis())
             AppState.update(ConnectionPhase.CONNECTED, configId)
             // Flush queued reports from inside the tunnel (doc §9.4).
             thread(name = "autoconnect-report-flush") { reports.flush() }
@@ -378,6 +400,7 @@ class AutoConnectVpnService : VpnService() {
             // because the probe itself could not run.
             if (!stopRequested && e !is ProbeInconclusiveException) {
                 reports.queue(configId, operator, "handshake", handshakeMs, "fail")
+                historyStore.record(configId, false, System.currentTimeMillis())
             }
             null
         }
@@ -493,6 +516,104 @@ class AutoConnectVpnService : VpnService() {
         return ProbeResult.FAILED
     }
 
+    /** Fetch the IP-echo trace and parse our public address.
+     *  [network] == null measures the direct path (only meaningful
+     *  before the TUN exists); bound to the VPN network it measures
+     *  the tunnel's exit. Null on any failure — unknown, never a
+     *  verdict. */
+    private fun fetchTraceIp(network: Network?): String? {
+        var conn: HttpURLConnection? = null
+        return try {
+            conn = (if (network != null) {
+                network.openConnection(URL(LeakCheck.TRACE_URL))
+            } else {
+                URL(LeakCheck.TRACE_URL).openConnection()
+            }) as HttpURLConnection
+            conn.connectTimeout = 6_000
+            conn.readTimeout = 6_000
+            if (conn.responseCode !in 200..299) {
+                null
+            } else {
+                LeakCheck.parseTraceIp(conn.inputStream.bufferedReader(Charsets.UTF_8).readText())
+            }
+        } catch (_: Exception) {
+            null
+        } finally {
+            conn?.disconnect()
+        }
+    }
+
+    /**
+     * The in-app leak check for the just-established session: exit IP
+     * vs the pre-tunnel baseline, the VPN network's DNS set vs the
+     * imposed set, and whether a default IPv6 route is captured.
+     * Results land in [AppState] for the details card; any failed
+     * measurement stays null (unknown) rather than reading as a leak.
+     */
+    private fun runLeakCheck(
+        baselineThread: Thread,
+        baselineIp: java.util.concurrent.atomic.AtomicReference<String?>,
+    ) {
+        try {
+            baselineThread.join(5_000)
+        } catch (_: InterruptedException) {
+            return
+        }
+        if (stopRequested) return
+        val network = resolveVpnNetwork()
+        val exitIp = if (network != null) fetchTraceIp(network) else null
+        val verdict = LeakCheck.ipVerdict(baselineIp.get(), exitIp)
+        var dnsOk: Boolean? = null
+        var v6Ok: Boolean? = null
+        val cm = connectivity
+        if (network != null && cm != null) {
+            try {
+                val lp = cm.getLinkProperties(network)
+                if (lp != null) {
+                    dnsOk = LeakCheck.dnsOk(
+                        tunDnsServers,
+                        lp.dnsServers.mapNotNull { it.hostAddress }.toSet(),
+                    )
+                    v6Ok = if (android.os.Build.VERSION.SDK_INT >= 29) {
+                        lp.routes.any {
+                            it.isDefaultRoute && it.destination is java.net.Inet6Address
+                        }
+                    } else {
+                        null
+                    }
+                }
+            } catch (_: Exception) {
+                // Link properties are best-effort evidence; absence is unknown.
+            }
+        }
+        if (stopRequested) return
+        AppState.leakExitIp = exitIp
+        AppState.leakDetected = when (verdict) {
+            LeakCheck.IpVerdict.LEAK -> true
+            LeakCheck.IpVerdict.OK -> false
+            LeakCheck.IpVerdict.UNKNOWN -> null
+        }
+        AppState.leakDnsOk = dnsOk
+        AppState.leakV6Ok = v6Ok
+        AppLog.log("vpn", "leak check: exit=$exitIp verdict=$verdict dns=$dnsOk v6=$v6Ok")
+        if (AppState.phase == ConnectionPhase.CONNECTED) {
+            AppState.update(ConnectionPhase.CONNECTED, AppState.statusMessage)
+        }
+    }
+
+    /** This device's own candidate track record (local-history
+     *  scoring, 2026-11-24): probe verdicts are recorded here and the
+     *  next connect cycle orders candidates with them. */
+    private val historyStore by lazy {
+        HistoryStore(File(applicationContext.filesDir, "history.json"))
+    }
+
+    /** DNS servers imposed on the current TUN (recorded at build
+     *  time); the leak check compares the VPN network's actual DNS
+     *  set against these. */
+    @Volatile
+    private var tunDnsServers: Set<String> = emptySet()
+
     /** Set while a stop teardown is running; a session that starts in
      *  that window waits for the old TUN to be fully down before its
      *  first fetch (on-device log 2026-11-22: a reconnect 2 s after
@@ -597,14 +718,18 @@ class AutoConnectVpnService : VpnService() {
 
         try {
             val dns = options.dnsServerAddress
+            val imposed = mutableSetOf<String>()
             if (dns != null) {
                 while (dns.hasNext()) {
                     try {
-                        builder.addDnsServer(dns.next())
+                        val server = dns.next()
+                        builder.addDnsServer(server)
+                        imposed.add(server)
                     } catch (_: Exception) {
                     }
                 }
             }
+            tunDnsServers = imposed
         } catch (e: Exception) {
             AppLog.log("vpn", "dns servers read failed: ${e.message}")
         }

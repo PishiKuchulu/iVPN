@@ -60,6 +60,8 @@ mkdir -p "$OUT"
   src/main/java/autoconnect/app/ReportStore.kt \
   src/main/java/autoconnect/app/ReportQueue.kt \
   src/main/java/autoconnect/app/BundleClient.kt \
+  src/main/java/autoconnect/app/LocalHistory.kt \
+  src/main/java/autoconnect/app/LeakCheck.kt \
   src/main/java/autoconnect/app/OperatorKeys.kt \
   tests/kotlin/autoconnect/app/*.kt \
   -cp "$ANDROID_JAR" \

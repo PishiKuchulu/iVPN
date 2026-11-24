@@ -379,6 +379,234 @@ private fun r11ProbeBindsVpnNetwork() {
     )
 }
 
+// ------------------------------------------- R12: local history store
+
+private fun r12HistoryStore() {
+    val dir = tempDir("r12")
+    val file = File(dir, "history.json")
+    val store = HistoryStore(file)
+    check("R12: empty history snapshots empty", store.snapshot().isEmpty())
+
+    store.record("sha256:aaa", true, 1_000)
+    store.record("sha256:aaa", true, 2_000)
+    store.record("sha256:aaa", false, 3_000)
+    store.record("sha256:bbb", false, 3_500)
+    val snap = store.snapshot()
+    check("R12: counts accumulate", snap["sha256:aaa"]?.successes == 2 && snap["sha256:aaa"]?.failures == 1)
+    check("R12: lastSeen tracks the latest verdict", snap["sha256:aaa"]?.lastSeenMs == 3_000L)
+    check(
+        "R12: Laplace rate (2 ok, 1 fail) = 3/5",
+        kotlin.math.abs((snap["sha256:aaa"]?.rate() ?: 0.0) - 0.6) < 1e-9,
+    )
+    check(
+        "R12: Laplace rate (0 ok, 1 fail) = 1/3",
+        kotlin.math.abs((snap["sha256:bbb"]?.rate() ?: 0.0) - (1.0 / 3.0)) < 1e-9,
+    )
+
+    val reloaded = HistoryStore(file).snapshot()
+    check("R12: history persists across instances", reloaded["sha256:aaa"]?.successes == 2)
+
+    val big = HistoryStore(File(dir, "history-big.json"))
+    for (i in 0 until HistoryStore.MAX_ENTRIES + 25) {
+        big.record("sha256:cfg$i", true, 10_000L + i)
+    }
+    val bigSnap = big.snapshot()
+    check("R12: store is capped", bigSnap.size == HistoryStore.MAX_ENTRIES)
+    check("R12: the oldest entries fall off first", !bigSnap.containsKey("sha256:cfg0"))
+    check("R12: the newest entry survives the cap", bigSnap.containsKey("sha256:cfg${HistoryStore.MAX_ENTRIES + 24}"))
+}
+
+// --------------------------------- R13: candidate ordering (history
+// + load spreading)
+
+private fun recordObj(id: String, score: Double?, excluded: List<String> = emptyList()): JsonObj {
+    val entries = linkedMapOf<String, autoconnect.adapter.JsonValue>(
+        "id" to jstr(id),
+        "protocol" to jstr("vless"),
+        "server" to jstr("203.0.113.1"),
+        "port" to jnum(443),
+        "credential" to jstr("00000000-0000-0000-0000-000000000000"),
+    )
+    if (score != null) {
+        entries["operator_scores"] = JsonObj(linkedMapOf("mci" to autoconnect.adapter.JsonNum(score.toString())))
+    }
+    if (excluded.isNotEmpty()) {
+        entries["excluded_operators"] = JsonArr(excluded.map { jstr(it) })
+    }
+    return JsonObj(LinkedHashMap(entries))
+}
+
+private fun bundleOf(vararg records: JsonObj): Bundle =
+    Bundle(version = 1, sampleOnly = false, configJsonObjects = records.toList())
+
+private fun idsOf(objs: List<JsonObj>): List<String?> =
+    objs.map { it.entries["id"]?.let { v -> (v as? autoconnect.adapter.JsonStr)?.value } }
+
+private fun r13Ordering() {
+    // No signal at all: bundle order is preserved exactly (recency).
+    val plain = bundleOf(recordObj("a", null), recordObj("b", null), recordObj("c", null))
+    check(
+        "R13: no signal -> bundle order untouched",
+        idsOf(orderCandidates(plain, "mci")) == listOf("a", "b", "c"),
+    )
+
+    // Distinct bundle scores: strict descending order, no band crossing.
+    val scored = bundleOf(recordObj("low", 0.2), recordObj("high", 0.9), recordObj("mid", 0.5))
+    check(
+        "R13: bundle scores order descending",
+        idsOf(orderCandidates(scored, "mci", random = kotlin.random.Random(7))) == listOf("high", "mid", "low"),
+    )
+
+    // Excluded for this operator: dropped even with the top score.
+    val withExcluded = bundleOf(
+        recordObj("banned", 1.0, excluded = listOf("mci")),
+        recordObj("ok", 0.1),
+    )
+    check(
+        "R13: operator-excluded record is dropped",
+        idsOf(orderCandidates(withExcluded, "mci")) == listOf("ok"),
+    )
+
+    // Local history outweighs the bundle: a locally proven config with
+    // a mediocre bundle score beats an unproven higher bundle score.
+    // proven: 0.65 * rate(9 ok, 0 fail = 10/11) + 0.35 * 0.3 = 0.696
+    // unproven: 0.6 (bundle only)
+    val hist = mapOf("proven" to HistoryStats(successes = 9, failures = 0, lastSeenMs = 1L))
+    val blended = bundleOf(recordObj("unproven", 0.6), recordObj("proven", 0.3))
+    check(
+        "R13: local success history outranks a higher bundle score",
+        idsOf(orderCandidates(blended, "mci", hist, kotlin.random.Random(7))) == listOf("proven", "unproven"),
+    )
+
+    // Local failures demote: repeated failures sink a top bundle score.
+    // failing: 0.65 * rate(0 ok, 9 fail = 1/11) + 0.35 * 0.9 = 0.374
+    // plain2: 0.5 (bundle only)
+    val failHist = mapOf("failing" to HistoryStats(successes = 0, failures = 9, lastSeenMs = 1L))
+    val demoted = bundleOf(recordObj("failing", 0.9), recordObj("plain2", 0.5))
+    check(
+        "R13: local failure history demotes",
+        idsOf(orderCandidates(demoted, "mci", failHist, kotlin.random.Random(7))) == listOf("plain2", "failing"),
+    )
+
+    // Load spreading: equal scores form one band; the band's members
+    // are all present, and a seeded shuffle is deterministic.
+    val tied = bundleOf(
+        recordObj("t1", 0.8), recordObj("t2", 0.8), recordObj("t3", 0.8),
+        recordObj("t4", 0.8), recordObj("t5", 0.8), recordObj("t6", 0.8),
+    )
+    val run1 = idsOf(orderCandidates(tied, "mci", random = kotlin.random.Random(42)))
+    val run2 = idsOf(orderCandidates(tied, "mci", random = kotlin.random.Random(42)))
+    check("R13: band keeps every member", run1.toSet() == setOf("t1", "t2", "t3", "t4", "t5", "t6"))
+    check("R13: seeded shuffle is deterministic", run1 == run2)
+    check("R13: the band actually shuffles (seed 42)", run1 != listOf("t1", "t2", "t3", "t4", "t5", "t6"))
+
+    // Bands never cross: a far-below score stays below the whole band.
+    val banded = bundleOf(
+        recordObj("top1", 0.80), recordObj("top2", 0.79), recordObj("low", 0.10),
+    )
+    val bandedIds = idsOf(orderCandidates(banded, "mci", random = kotlin.random.Random(3)))
+    check("R13: bands never cross", bandedIds.last() == "low" && bandedIds.first() in setOf("top1", "top2"))
+}
+
+// ------------------------------------------- R14: multi-mirror fetch
+
+private fun r14MirrorRace() {
+    val factory = BundleFactory()
+
+    // First mirror dead, second serves: the bundle comes from mirror 2.
+    run {
+        val dir = tempDir("r14a")
+        val cacheFile = File(dir, "bundle-cache.json")
+        val watermark = MemWatermark()
+        val client = BundleClient(
+            cacheFile, watermark,
+            { url ->
+                if (url.startsWith("https://dead")) throw BundleTransportException("mirror down")
+                factory.signedBundle(5)
+            },
+            factory.publicKeyB64,
+            mirrorBaseUrls = listOf("https://dead", "https://good"),
+        )
+        check("R14: failover to the second mirror", client.fetchVerified().version == 5)
+        check("R14: cache written from the winning mirror", cacheFile.readText().contains("\"version\":5"))
+    }
+
+    // First mirror fast but TAMPERED, second slower but valid: the
+    // verified one wins — arrival order never beats authenticity.
+    run {
+        val dir = tempDir("r14b")
+        val cacheFile = File(dir, "bundle-cache.json")
+        val watermark = MemWatermark()
+        val client = BundleClient(
+            cacheFile, watermark,
+            { url ->
+                if (url.startsWith("https://fast")) {
+                    factory.tamperedBundle(9)
+                } else {
+                    Thread.sleep(300)
+                    factory.signedBundle(6)
+                }
+            },
+            factory.publicKeyB64,
+            mirrorBaseUrls = listOf("https://fast", "https://slow"),
+        )
+        check("R14: a tampered fast mirror cannot beat a valid slow one", client.fetchVerified().version == 6)
+        check("R14: watermark advanced only by the valid bundle", watermark.lastBundleVersion == 6)
+    }
+
+    // All mirrors down: the verified cache still serves.
+    run {
+        val dir = tempDir("r14c")
+        val cacheFile = File(dir, "bundle-cache.json")
+        val watermark = MemWatermark()
+        var down = false
+        val client = BundleClient(
+            cacheFile, watermark,
+            { if (down) throw BundleTransportException("all down") else factory.signedBundle(7) },
+            factory.publicKeyB64,
+            mirrorBaseUrls = listOf("https://m1", "https://m2"),
+        )
+        client.fetchVerified()
+        down = true
+        check("R14: all mirrors down -> verified cache serves", client.fetchVerified().version == 7)
+    }
+}
+
+// ------------------------------------------------- R15: leak check
+
+private fun r15LeakCheck() {
+    val trace = "fl=123\nh=www.cloudflare.com\nip=185.199.108.1\nts=1700000000\nloc=NL\n"
+    check("R15: trace ip parsed", LeakCheck.parseTraceIp(trace) == "185.199.108.1")
+    check("R15: garbage trace -> null", LeakCheck.parseTraceIp("nothing here") == null)
+    check("R15: null trace -> null", LeakCheck.parseTraceIp(null) == null)
+    check("R15: empty ip -> null", LeakCheck.parseTraceIp("ip=\n") == null)
+
+    check(
+        "R15: equal addresses = leak",
+        LeakCheck.ipVerdict("1.2.3.4", "1.2.3.4") == LeakCheck.IpVerdict.LEAK,
+    )
+    check(
+        "R15: different addresses = ok",
+        LeakCheck.ipVerdict("1.2.3.4", "185.199.108.1") == LeakCheck.IpVerdict.OK,
+    )
+    check(
+        "R15: missing baseline = unknown",
+        LeakCheck.ipVerdict(null, "185.199.108.1") == LeakCheck.IpVerdict.UNKNOWN,
+    )
+    check(
+        "R15: missing exit = unknown",
+        LeakCheck.ipVerdict("1.2.3.4", null) == LeakCheck.IpVerdict.UNKNOWN,
+    )
+
+    check("R15: dns subset of imposed = ok", LeakCheck.dnsOk(setOf("1.1.1.1"), setOf("1.1.1.1")) == true)
+    check(
+        "R15: foreign dns server = not ok",
+        LeakCheck.dnsOk(setOf("1.1.1.1"), setOf("1.1.1.1", "8.8.8.8")) == false,
+    )
+    check("R15: unknown imposed set = unknown", LeakCheck.dnsOk(emptySet(), setOf("1.1.1.1")) == null)
+    check("R15: unknown vpn set = unknown", LeakCheck.dnsOk(setOf("1.1.1.1"), emptySet()) == null)
+}
+
 // ---------------------------------------------------------------- main
 
 fun main() {
@@ -396,6 +624,10 @@ fun main() {
     r10StaleCacheServedFlagged()
     r10StaleSeedServedFlagged()
     r11ProbeBindsVpnNetwork()
+    r12HistoryStore()
+    r13Ordering()
+    r14MirrorRace()
+    r15LeakCheck()
 
     println("AppTests: $passed passed, $failed failed, ${passed + failed} total")
     if (failed > 0) {

@@ -45,4 +45,10 @@
     <string name="copy_log">Copy log</string>
     <string name="log_copied">Log copied</string>
     <string name="log_empty">No events recorded yet.</string>
+    <string name="leak_ip_label">Exit IP</string>
+    <string name="leak_dns_label">DNS leak</string>
+    <string name="leak_v6_label">IPv6 leak</string>
+    <string name="leak_value_ok">OK</string>
+    <string name="leak_value_risk">Leaking</string>
+    <string name="leak_value_unknown">Unknown</string>
 </resources>

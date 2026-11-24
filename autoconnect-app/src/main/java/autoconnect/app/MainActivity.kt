@@ -258,6 +258,24 @@ class MainActivity : BaseActivity() {
         }
         if (AppState.phase == ConnectionPhase.CONNECTED) {
             exitCountry?.let { detailRow(getString(R.string.exit_label), it) }
+            // In-app leak check (2026-11-24): honest tri-state rows —
+            // an unmeasured item reads "unknown", never "safe".
+            val pal = Ui.palette(this)
+            fun triState(ok: Boolean?): Pair<String, Int?> = when (ok) {
+                true -> getString(R.string.leak_value_ok) to null
+                false -> getString(R.string.leak_value_risk) to pal.red
+                null -> getString(R.string.leak_value_unknown) to null
+            }
+            val ipText = AppState.leakExitIp ?: getString(R.string.leak_value_unknown)
+            detailRow(
+                getString(R.string.leak_ip_label),
+                ipText,
+                if (AppState.leakDetected == true) pal.red else null,
+            )
+            val (dnsText, dnsColor) = triState(AppState.leakDnsOk)
+            detailRow(getString(R.string.leak_dns_label), dnsText, dnsColor)
+            val (v6Text, v6Color) = triState(AppState.leakV6Ok)
+            detailRow(getString(R.string.leak_v6_label), v6Text, v6Color)
         }
         AppState.lastError?.let {
             detailRow(getString(R.string.error_label), it, Ui.palette(this).red)

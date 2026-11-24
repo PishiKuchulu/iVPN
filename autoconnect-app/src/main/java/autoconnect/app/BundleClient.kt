@@ -77,6 +77,7 @@ class BundleClient internal constructor(
     private val publicKeyB64: String = PUBLIC_KEY_B64,
     private val seedProvider: () -> String? = { null },
     private val nowMs: () -> Long = { System.currentTimeMillis() },
+    private val mirrorBaseUrls: List<String> = listOf(BuildConfig.BACKEND_BASE_URL),
 ) {
 
     constructor(context: Context) : this(
@@ -96,6 +97,10 @@ class BundleClient internal constructor(
     companion object {
         private const val PUBLIC_KEY_B64 = "3kz5mOnKQSno3Ip+cUzn1tncIVnmQzOL1uUfyFmXI+g="
         private const val BUNDLE_PATH = "/api/bundle"
+
+        /** Total wait for the mirror race (the single-mirror fetcher
+         *  carries its own identical 25 s deadline). */
+        private const val MIRROR_DEADLINE_MS = 25_000L
 
         private val FETCH_EXECUTOR = java.util.concurrent.Executors.newCachedThreadPool { r ->
             Thread(r, "bundle-fetch").apply { isDaemon = true }
@@ -145,21 +150,12 @@ class BundleClient internal constructor(
         }
     }
 
-    /** Fetch fresh from the backend; on ANY fetch failure, serve the
-     *  re-verified cache, then the verified bundled seed; hard-fail only
-     *  when no tier yields a usable bundle. */
+    /** Fetch fresh from the backend mirrors; on ANY fetch failure,
+     *  serve the re-verified cache, then the verified bundled seed;
+     *  hard-fail only when no tier yields a usable bundle. */
     fun fetchVerified(): Bundle {
         return try {
-            val text = fetcher(BuildConfig.BACKEND_BASE_URL + BUNDLE_PATH)
-            val bundle = verifyAndParse(text)
-            // A stale FETCH is rejected (AUD-003): the producer's own
-            // freshness signal says a fresher bundle should exist; the
-            // cache/seed tiers below decide what to fall back to. The
-            // stale bundle did not advance the anti-rollback watermark
-            // (see verifyAndParse), so the older cache stays servable.
-            if (bundle.stale) {
-                throw BundleTransportException("fetched bundle v${bundle.version} is past its soft expiry")
-            }
+            val (bundle, text) = fetchVerifiedFromMirrors()
             // Cache only AFTER successful verification.
             try {
                 cacheFile.writeText(text)
@@ -174,6 +170,63 @@ class BundleClient internal constructor(
                 ?: loadSeedVerified()
                 ?: throw BundleException("fetch failed and no verified cached bundle: ${e.message}")
         }
+    }
+
+    /**
+     * Race the configured mirrors (multi-mirror fetch, 2026-11-24):
+     * every mirror is queried in parallel and each response is
+     * verified AS IT ARRIVES — the first verified, non-stale bundle
+     * wins, so a fast but invalid (or stale) mirror can never beat a
+     * slower valid one. A stale fetch is rejected (AUD-003): the
+     * producer's own freshness signal says a fresher bundle should
+     * exist. A single configured mirror degenerates to the plain fetch
+     * this replaces; the list is where a future custom domain plugs
+     * in. Total wait is bounded by [MIRROR_DEADLINE_MS].
+     */
+    private fun fetchVerifiedFromMirrors(): Pair<Bundle, String> {
+        val urls = mirrorBaseUrls.map { it.trimEnd('/') + BUNDLE_PATH }
+        if (urls.size == 1) {
+            val text = fetcher(urls[0])
+            val bundle = verifyAndParse(text)
+            if (bundle.stale) {
+                throw BundleTransportException("fetched bundle v${bundle.version} is past its soft expiry")
+            }
+            return bundle to text
+        }
+        val completion = java.util.concurrent.ExecutorCompletionService<String>(FETCH_EXECUTOR)
+        val futures = urls.map { u -> completion.submit(java.util.concurrent.Callable { fetcher(u) }) }
+        val deadlineNs = System.nanoTime() +
+            java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(MIRROR_DEADLINE_MS)
+        var lastError: Exception? = null
+        var pending = futures.size
+        try {
+            while (pending > 0) {
+                val remainingMs = (deadlineNs - System.nanoTime()) / 1_000_000
+                if (remainingMs <= 0) break
+                val done = completion.poll(remainingMs, java.util.concurrent.TimeUnit.MILLISECONDS) ?: break
+                pending--
+                try {
+                    val text = done.get()
+                    val bundle = verifyAndParse(text)
+                    if (bundle.stale) {
+                        lastError =
+                            BundleTransportException("fetched bundle v${bundle.version} is past its soft expiry")
+                        continue
+                    }
+                    return bundle to text
+                } catch (e: Exception) {
+                    lastError = if (e is java.util.concurrent.ExecutionException) {
+                        (e.cause as? Exception) ?: e
+                    } else {
+                        e
+                    }
+                    AppLog.log("bundle", "mirror response unusable: ${lastError?.message}")
+                }
+            }
+        } finally {
+            futures.forEach { it.cancel(true) }
+        }
+        throw lastError ?: BundleTransportException("all bundle mirrors failed")
     }
 
     /** The APK's bundled seed bundle, verified exactly like a fetch.
@@ -288,14 +341,41 @@ private class PrefsWatermarkStore(private val prefs: Prefs) : WatermarkStore {
         }
 }
 
+/** Weight of this device's own track record in the combined score:
+ *  local evidence was measured here, on this operator, through the
+ *  real tunnel, so it outweighs the crowd signal. */
+const val LOCAL_WEIGHT = 0.65
+
+/** Load spreading: how far below a band's leader a combined score may
+ *  sit and still share the band (and its shuffle). */
+const val TIER_EPSILON = 0.05
+
+private data class ScoredCandidate(val obj: JsonObj, val score: Double)
+
 /**
- * Candidate ordering shared by the connect flow (doc §8.1 step 3):
- * drop records that fail to parse and records excluded for this
- * operator; order by the bundle's per-operator score, descending
- * (stable: bundle order breaks ties).
+ * Candidate ordering shared by the connect flow (doc §8.1 step 3),
+ * extended 2026-11-24 with local-history scoring and load spreading:
+ *
+ *  - records that fail to parse and records excluded for this
+ *    operator are dropped, as before;
+ *  - each record's combined score blends the bundle's per-operator
+ *    score with this device's own track record when it has one
+ *    ([LOCAL_WEIGHT]);
+ *  - load spreading: records whose combined scores sit within
+ *    [TIER_EPSILON] of their band leader are shuffled within the
+ *    band, so a fleet of installs does not all hammer the same top
+ *    config in the same order. When there is no score signal at all
+ *    (every combined score is 0 — no reports, no history), the
+ *    bundle's own order is kept untouched: recency is the only
+ *    signal then, and it belongs to the bundle.
  */
-fun orderCandidates(bundle: Bundle, operator: String): List<JsonObj> {
-    return bundle.configJsonObjects
+fun orderCandidates(
+    bundle: Bundle,
+    operator: String,
+    history: Map<String, HistoryStats> = emptyMap(),
+    random: kotlin.random.Random = kotlin.random.Random.Default,
+): List<JsonObj> {
+    val scored = bundle.configJsonObjects
         .mapNotNull { obj ->
             try {
                 ConfigRecord.fromJson(obj) to obj
@@ -304,6 +384,28 @@ fun orderCandidates(bundle: Bundle, operator: String): List<JsonObj> {
             }
         }
         .filter { (record, _) -> operator !in record.excludedOperators }
-        .sortedByDescending { (record, _) -> record.operatorScores[operator] ?: 0.0 }
-        .map { (_, obj) -> obj }
+        .map { (record, obj) ->
+            val bundleScore = record.operatorScores[operator] ?: 0.0
+            val local = history[record.id ?: record.computedId()]
+            val combined = if (local != null && local.total > 0) {
+                LOCAL_WEIGHT * local.rate() + (1.0 - LOCAL_WEIGHT) * bundleScore
+            } else {
+                bundleScore
+            }
+            ScoredCandidate(obj, combined)
+        }
+        .sortedByDescending { it.score }
+    if (scored.isEmpty() || scored.first().score <= 0.0) {
+        return scored.map { it.obj }
+    }
+    val out = ArrayList<JsonObj>(scored.size)
+    var i = 0
+    while (i < scored.size) {
+        var j = i + 1
+        while (j < scored.size && scored[i].score - scored[j].score <= TIER_EPSILON) j++
+        val band = scored.subList(i, j).map { it.obj }
+        out.addAll(if (band.size > 1) band.shuffled(random) else band)
+        i = j
+    }
+    return out
 }
