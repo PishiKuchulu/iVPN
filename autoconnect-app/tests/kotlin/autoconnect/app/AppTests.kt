@@ -644,6 +644,34 @@ private fun r16UserSwitch() {
     )
 }
 
+// ------------------------------------------ R17: exit-country flag
+
+private fun r17ExitFlag() {
+    val body = "fl=123f\nh=www.cloudflare.com\nip=203.0.113.7\nloc=DE\ntls=off\n"
+    check("R17: loc parsed from a trace body", LeakCheck.parseTraceLoc(body) == "DE")
+    check("R17: missing loc -> null", LeakCheck.parseTraceLoc("ip=1.2.3.4\n") == null)
+    check("R17: null body -> null", LeakCheck.parseTraceLoc(null) == null)
+    check("R17: XX is unknown, not a country", LeakCheck.parseTraceLoc("loc=XX\n") == null)
+    check("R17: lowercase loc normalized", LeakCheck.parseTraceLoc("loc=nl\n") == "NL")
+    check("R17: non-letter loc rejected", LeakCheck.parseTraceLoc("loc=D3\n") == null)
+    check("R17: three-letter loc rejected", LeakCheck.parseTraceLoc("loc=DEU\n") == null)
+
+    check("R17: flag for DE", LeakCheck.flagEmoji("DE") == "\uD83C\uDDE9\uD83C\uDDEA")
+    check("R17: flag for lowercase us", LeakCheck.flagEmoji("us") == "\uD83C\uDDFA\uD83C\uDDF8")
+    check("R17: flag for null -> null", LeakCheck.flagEmoji(null) == null)
+    check("R17: flag for XX -> null", LeakCheck.flagEmoji("XX") == null)
+    check("R17: flag for DEU -> null", LeakCheck.flagEmoji("DEU") == null)
+    check("R17: flag for empty -> null", LeakCheck.flagEmoji("") == null)
+
+    val svc = File("src/main/java/autoconnect/app/AutoConnectVpnService.kt").readText()
+    check("R17: service stores the measured exit country", svc.contains("AppState.exitCountryCode = exitLoc"))
+    check("R17: service resets the exit country per cycle", svc.contains("AppState.exitCountryCode = null"))
+
+    val act = File("src/main/java/autoconnect/app/MainActivity.kt").readText()
+    check("R17: UI renders the flag from the measured code", act.contains("LeakCheck.flagEmoji(AppState.exitCountryCode)"))
+    check("R17: bundle country lookup is gone", !act.contains("maybeLoadExitCountry"))
+}
+
 // ---------------------------------------------------------------- main
 
 fun main() {
@@ -666,6 +694,7 @@ fun main() {
     r14MirrorRace()
     r15LeakCheck()
     r16UserSwitch()
+    r17ExitFlag()
 
     println("AppTests: $passed passed, $failed failed, ${passed + failed} total")
     if (failed > 0) {

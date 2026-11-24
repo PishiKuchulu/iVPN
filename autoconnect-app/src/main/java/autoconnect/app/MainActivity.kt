@@ -14,7 +14,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import autoconnect.adapter.ConfigRecord
 import java.util.Locale
 
 /**
@@ -28,6 +27,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var statusView: TextView
     private lateinit var durationView: TextView
+    private lateinit var flagView: TextView
     private lateinit var switchButton: View
     private lateinit var powerCircle: LinearLayout
     private lateinit var powerLabel: TextView
@@ -37,14 +37,6 @@ class MainActivity : BaseActivity() {
     private val stateListener: () -> Unit = {
         handler.post { refreshUi() }
     }
-
-    // Exit country of the current config, resolved once per config id
-    // from the cached verified bundle (real data; never invented).
-    @Volatile
-    private var exitCountryForId: String? = null
-
-    @Volatile
-    private var exitCountry: String? = null
 
     private var tickerRunning = false
     private val ticker = object : Runnable {
@@ -120,6 +112,18 @@ class MainActivity : BaseActivity() {
             visibility = View.GONE
         }
         root.addView(durationView, LinearLayout.LayoutParams(-1, -2).apply {
+            topMargin = Ui.dp(this@MainActivity, Ui.SPACE_S)
+        })
+
+        // Connected-country flag (2026-11-24): the exit country,
+        // measured live through the tunnel by the leak check, shown
+        // as its flag ONLY — no country name anywhere in the UI.
+        flagView = TextView(this).apply {
+            textSize = 44f
+            gravity = Gravity.CENTER
+            visibility = View.GONE
+        }
+        root.addView(flagView, LinearLayout.LayoutParams(-1, -2).apply {
             topMargin = Ui.dp(this@MainActivity, Ui.SPACE_S)
         })
 
@@ -206,12 +210,18 @@ class MainActivity : BaseActivity() {
 
         updateDuration()
         switchButton.visibility = if (phase == ConnectionPhase.CONNECTED) View.VISIBLE else View.GONE
+        val flag = if (phase == ConnectionPhase.CONNECTED) {
+            LeakCheck.flagEmoji(AppState.exitCountryCode)
+        } else {
+            null
+        }
+        flagView.text = flag ?: ""
+        flagView.visibility = if (flag != null) View.VISIBLE else View.GONE
         if (phase == ConnectionPhase.CONNECTED && !tickerRunning) {
             tickerRunning = true
             handler.postDelayed(ticker, 1000)
         }
 
-        AppState.currentConfigId?.let { maybeLoadExitCountry(it) }
         rebuildDetailsCard()
     }
 
@@ -274,7 +284,9 @@ class MainActivity : BaseActivity() {
             detailRow(getString(R.string.config_label), it.take(24) + "…")
         }
         if (AppState.phase == ConnectionPhase.CONNECTED) {
-            exitCountry?.let { detailRow(getString(R.string.exit_label), it) }
+            LeakCheck.flagEmoji(AppState.exitCountryCode)?.let {
+                detailRow(getString(R.string.exit_label), it)
+            }
             // In-app leak check (2026-11-24): honest tri-state rows —
             // an unmeasured item reads "unknown", never "safe".
             val pal = Ui.palette(this)
@@ -297,33 +309,6 @@ class MainActivity : BaseActivity() {
         AppState.lastError?.let {
             detailRow(getString(R.string.error_label), it, Ui.palette(this).red)
         }
-    }
-
-    /**
-     * Resolve the current config's exit country from the cached verified
-     * bundle, once per config id, off the UI thread. The bundle is the
-     * app's own verified data — if the record carries no exit country,
-     * the row simply never appears.
-     */
-    private fun maybeLoadExitCountry(configId: String) {
-        if (exitCountryForId == configId) return
-        exitCountryForId = configId
-        exitCountry = null
-        Thread {
-            val found = try {
-                val bundle = BundleClient(applicationContext).loadCachedVerified()
-                bundle?.configJsonObjects?.firstNotNullOfOrNull { obj ->
-                    val rec = ConfigRecord.fromJson(obj)
-                    if (rec.id == configId || rec.computedId() == configId) rec.exit?.country else null
-                }
-            } catch (_: Exception) {
-                null
-            }
-            if (exitCountryForId == configId) {
-                exitCountry = found
-                handler.post { refreshUi() }
-            }
-        }.start()
     }
 
     private fun onConnectTapped() {

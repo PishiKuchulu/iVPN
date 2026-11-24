@@ -34,6 +34,12 @@ object AppState {
     @Volatile
     var leakExitIp: String? = null
 
+    /** ISO alpha-2 code of the exit country, measured through the
+     *  tunnel by the leak check (the trace `loc=` field). The UI
+     *  displays it as a flag only; null = not measured. */
+    @Volatile
+    var exitCountryCode: String? = null
+
     /** True = exit IP equals the pre-tunnel baseline (leak);
      *  false = exit differs (tunnel is carrying us); null = unknown. */
     @Volatile

@@ -315,6 +315,7 @@ class AutoConnectVpnService : VpnService() {
                 // In-app leak check for this session (async; results
                 // land in AppState for the details card).
                 AppState.leakExitIp = null
+                AppState.exitCountryCode = null
                 AppState.leakDetected = null
                 AppState.leakDnsOk = null
                 AppState.leakV6Ok = null
@@ -570,7 +571,12 @@ class AutoConnectVpnService : VpnService() {
      *  before the TUN exists); bound to the VPN network it measures
      *  the tunnel's exit. Null on any failure — unknown, never a
      *  verdict. */
-    private fun fetchTraceIp(network: Network?): String? {
+    private fun fetchTraceIp(network: Network?): String? =
+        LeakCheck.parseTraceIp(fetchTraceBody(network))
+
+    /** Fetch the raw IP-echo trace body; the leak check parses both
+     *  the exit IP and the exit country (`loc=`) out of it. */
+    private fun fetchTraceBody(network: Network?): String? {
         var conn: HttpURLConnection? = null
         return try {
             conn = (if (network != null) {
@@ -583,7 +589,7 @@ class AutoConnectVpnService : VpnService() {
             if (conn.responseCode !in 200..299) {
                 null
             } else {
-                LeakCheck.parseTraceIp(conn.inputStream.bufferedReader(Charsets.UTF_8).readText())
+                conn.inputStream.bufferedReader(Charsets.UTF_8).readText()
             }
         } catch (_: Exception) {
             null
@@ -610,7 +616,9 @@ class AutoConnectVpnService : VpnService() {
         }
         if (stopRequested) return
         val network = resolveVpnNetwork()
-        val exitIp = if (network != null) fetchTraceIp(network) else null
+        val exitBody = if (network != null) fetchTraceBody(network) else null
+        val exitIp = LeakCheck.parseTraceIp(exitBody)
+        val exitLoc = LeakCheck.parseTraceLoc(exitBody)
         val verdict = LeakCheck.ipVerdict(baselineIp.get(), exitIp)
         var dnsOk: Boolean? = null
         var v6Ok: Boolean? = null
@@ -637,6 +645,7 @@ class AutoConnectVpnService : VpnService() {
         }
         if (stopRequested) return
         AppState.leakExitIp = exitIp
+        AppState.exitCountryCode = exitLoc
         AppState.leakDetected = when (verdict) {
             LeakCheck.IpVerdict.LEAK -> true
             LeakCheck.IpVerdict.OK -> false
@@ -644,7 +653,7 @@ class AutoConnectVpnService : VpnService() {
         }
         AppState.leakDnsOk = dnsOk
         AppState.leakV6Ok = v6Ok
-        AppLog.log("vpn", "leak check: exit=$exitIp verdict=$verdict dns=$dnsOk v6=$v6Ok")
+        AppLog.log("vpn", "leak check: exit=$exitIp loc=$exitLoc verdict=$verdict dns=$dnsOk v6=$v6Ok")
         if (AppState.phase == ConnectionPhase.CONNECTED) {
             AppState.update(ConnectionPhase.CONNECTED, AppState.statusMessage)
         }
