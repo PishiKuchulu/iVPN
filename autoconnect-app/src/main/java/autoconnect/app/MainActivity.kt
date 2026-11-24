@@ -28,6 +28,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var statusView: TextView
     private lateinit var durationView: TextView
+    private lateinit var switchButton: View
     private lateinit var powerCircle: LinearLayout
     private lateinit var powerLabel: TextView
     private lateinit var detailsCard: LinearLayout
@@ -122,6 +123,21 @@ class MainActivity : BaseActivity() {
             topMargin = Ui.dp(this@MainActivity, Ui.SPACE_S)
         })
 
+        // Switch-to-next-config button (2026-11-24): visible only
+        // while connected; the service treats a switch as a
+        // preference, never as a failure of the current config.
+        switchButton = Ui.cardButton(this, getString(R.string.switch_config)) {
+            val intent = Intent(this@MainActivity, AutoConnectVpnService::class.java).apply {
+                action = AutoConnectVpnService.ACTION_SWITCH
+            }
+            if (Build.VERSION.SDK_INT >= 26) startForegroundService(intent) else startService(intent)
+        }
+        switchButton.visibility = View.GONE
+        root.addView(switchButton, LinearLayout.LayoutParams(-2, -2).apply {
+            gravity = Gravity.CENTER_HORIZONTAL
+            topMargin = Ui.dp(this@MainActivity, Ui.SPACE_M)
+        })
+
         // Details card: rows of real state only (built in refreshUi).
         detailsCard = Ui.card(this)
         root.addView(detailsCard, LinearLayout.LayoutParams(-1, -2).apply {
@@ -189,6 +205,7 @@ class MainActivity : BaseActivity() {
         powerCircle.contentDescription = powerLabel.text
 
         updateDuration()
+        switchButton.visibility = if (phase == ConnectionPhase.CONNECTED) View.VISIBLE else View.GONE
         if (phase == ConnectionPhase.CONNECTED && !tickerRunning) {
             tickerRunning = true
             handler.postDelayed(ticker, 1000)

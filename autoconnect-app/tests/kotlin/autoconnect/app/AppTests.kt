@@ -607,6 +607,43 @@ private fun r15LeakCheck() {
     check("R15: unknown vpn set = unknown", LeakCheck.dnsOk(setOf("1.1.1.1"), emptySet()) == null)
 }
 
+// ------------------------------------------ R16: user config switch
+
+private fun r16UserSwitch() {
+    val svc = File("src/main/java/autoconnect/app/AutoConnectVpnService.kt").readText()
+    check("R16: ACTION_SWITCH exists", svc.contains("ACTION_SWITCH"))
+
+    val monStart = svc.indexOf("fun monitorLoop")
+    check("R16: monitorLoop exists", monStart >= 0)
+    if (monStart >= 0) {
+        val monEnd = svc.indexOf("\n    private fun", monStart + 10).takeIf { it > monStart } ?: svc.length
+        val monBody = svc.substring(monStart, monEnd)
+        check("R16: monitor loop watches the switch flag", monBody.contains("switchRequested"))
+        check("R16: monitor returns the SWITCH outcome", monBody.contains("MonitorOutcome.SWITCH"))
+    }
+
+    val swStart = svc.indexOf("MonitorOutcome.SWITCH ->")
+    check("R16: session loop handles SWITCH", swStart >= 0)
+    if (swStart >= 0) {
+        val swEnd = svc.indexOf("MonitorOutcome.", swStart + 10).takeIf { it > swStart } ?: (swStart + 1500)
+        val swBlock = svc.substring(swStart, minOf(swEnd, svc.length))
+        check("R16: a user switch skips the config for the session", swBlock.contains("skipIds.add"))
+        check("R16: a user switch queues no report", !swBlock.contains("reports.queue"))
+        check("R16: a user switch records no history penalty", !swBlock.contains("historyStore.record"))
+        check("R16: a user switch does not bury the config as dead", !swBlock.contains("deadIds.add"))
+    }
+
+    check("R16: wrap-around pass exists", svc.contains("passCandidates(includeSkipped = true)"))
+
+    val act = File("src/main/java/autoconnect/app/MainActivity.kt").readText()
+    check("R16: UI sends ACTION_SWITCH", act.contains("ACTION_SWITCH"))
+    check("R16: UI labels the switch button", act.contains("R.string.switch_config"))
+    check(
+        "R16: switch button shows only while connected",
+        act.contains("switchButton.visibility = if (phase == ConnectionPhase.CONNECTED)"),
+    )
+}
+
 // ---------------------------------------------------------------- main
 
 fun main() {
@@ -628,6 +665,7 @@ fun main() {
     r13Ordering()
     r14MirrorRace()
     r15LeakCheck()
+    r16UserSwitch()
 
     println("AppTests: $passed passed, $failed failed, ${passed + failed} total")
     if (failed > 0) {

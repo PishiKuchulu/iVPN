@@ -52,4 +52,5 @@
     <string name="leak_value_ok">سالم</string>
     <string name="leak_value_risk">نشت دارد</string>
     <string name="leak_value_unknown">نامشخص</string>
+    <string name="switch_config">تعویض کانفیگ</string>
 </resources>

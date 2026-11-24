@@ -53,6 +53,7 @@ class AutoConnectVpnService : VpnService() {
         const val CHANNEL_ID = "autoconnect-vpn"
         const val ACTION_START = "autoconnect.app.action.START"
         const val ACTION_STOP = "autoconnect.app.action.STOP"
+        const val ACTION_SWITCH = "autoconnect.app.action.SWITCH"
         const val EXTRA_OPERATOR = "operator"
         // The probe must prove general through-tunnel connectivity, not
         // the reachability of one host: the first version probed only
@@ -101,6 +102,11 @@ class AutoConnectVpnService : VpnService() {
 
     @Volatile
     private var networkChanged = false
+
+    /** Set by ACTION_SWITCH while a session is connected; the monitor
+     *  loop consumes it and ends the monitor phase with SWITCH. */
+    @Volatile
+    private var switchRequested = false
 
     private val underlyingNetworks = mutableSetOf<Network>()
     private var primaryUnderlying: Network? = null
@@ -186,18 +192,29 @@ class AutoConnectVpnService : VpnService() {
                 thread(name = "autoconnect-session") { runSession(operator) }
             }
             ACTION_STOP -> stopVpn()
+            ACTION_SWITCH -> {
+                // Only a live, connected session can switch; a stray
+                // tap in any other phase is dropped, never queued.
+                if (running && AppState.phase == ConnectionPhase.CONNECTED) {
+                    switchRequested = true
+                }
+            }
         }
         return START_STICKY
     }
 
     // ------------------------------------------------------------ session
 
-    private enum class MonitorOutcome { STOPPED, DIED, NETWORK_CHANGED }
+    private enum class MonitorOutcome { STOPPED, DIED, NETWORK_CHANGED, SWITCH }
 
     private fun runSession(initialOperator: String) {
         var operator = initialOperator
         val builder = ProfileBuilder()
         val deadIds = mutableSetOf<String>()
+        // Configs the user switched away from during THIS session
+        // (2026-11-24): skipped, not buried — no failure semantics,
+        // and the set clears on wrap-around or a fresh session.
+        val skipIds = mutableSetOf<String>()
         val switchTimes = ArrayDeque<Long>()
         try {
             while (!stopRequested) {
@@ -249,32 +266,48 @@ class AutoConnectVpnService : VpnService() {
                 val baselineThread = thread(name = "autoconnect-leak-baseline") {
                     baselineIp.set(fetchTraceIp(null))
                 }
-                val ordered = orderCandidates(bundle, operator, historyStore.snapshot()).filter { obj ->
-                    val id = try {
-                        val r = ConfigRecord.fromJson(obj)
-                        r.id ?: r.computedId()
-                    } catch (_: Exception) {
-                        null
+                // One connect pass over the ordered candidates. Buried
+                // configs (deadIds) never come back this session;
+                // user-skipped configs (skipIds) sit out the first
+                // pass and return only on the wrap-around pass.
+                fun passCandidates(includeSkipped: Boolean): List<JsonObj> =
+                    orderCandidates(bundle, operator, historyStore.snapshot()).filter { obj ->
+                        val id = try {
+                            val r = ConfigRecord.fromJson(obj)
+                            r.id ?: r.computedId()
+                        } catch (_: Exception) {
+                            null
+                        }
+                        id == null || (id !in deadIds && (includeSkipped || id !in skipIds))
                     }
-                    id == null || id !in deadIds
+
+                fun tryPass(candidates: List<JsonObj>): String? {
+                    var attempts = 0
+                    for (obj in candidates) {
+                        if (stopRequested) break
+                        if (attempts >= MAX_ATTEMPTS) {
+                            AppLog.log("vpn", "attempt cap ($MAX_ATTEMPTS) reached")
+                            break
+                        }
+                        attempts++
+                        val hit = tryCandidate(obj, operator, builder)
+                        if (hit != null) return hit
+                    }
+                    return null
                 }
-                var connectedId: String? = null
-                var attempts = 0
-                for (obj in ordered) {
-                    if (stopRequested) break
-                    if (attempts >= MAX_ATTEMPTS) {
-                        AppLog.log("vpn", "attempt cap ($MAX_ATTEMPTS) reached")
-                        break
-                    }
-                    attempts++
-                    connectedId = tryCandidate(obj, operator, builder)
-                    if (connectedId != null) break
+
+                switchRequested = false // a stale request never leaks into a fresh cycle
+                var connectedId = tryPass(passCandidates(includeSkipped = false))
+                if (connectedId == null && skipIds.isNotEmpty() && !stopRequested) {
+                    AppLog.log("vpn", "no unskipped candidate connected — wrapping around to the full list")
+                    skipIds.clear()
+                    connectedId = tryPass(passCandidates(includeSkipped = true))
                 }
                 if (connectedId == null) {
                     if (!stopRequested) {
                         AppState.lastError = "no working config found"
                         AppState.update(ConnectionPhase.FAILED, "no working config found")
-                        AppLog.log("vpn", "all candidates failed (attempts=$attempts)")
+                        AppLog.log("vpn", "all candidates failed")
                     }
                     break
                 }
@@ -299,6 +332,18 @@ class AutoConnectVpnService : VpnService() {
                         }
                         coreUp = false
                         operator = OperatorDetector.detect(applicationContext)
+                    }
+                    MonitorOutcome.SWITCH -> {
+                        // The user asked for the next config. A switch
+                        // is a preference, not a verdict: the config is
+                        // neither reported nor penalised nor buried —
+                        // it only sits out the rest of this session
+                        // (with wrap-around if nothing else connects).
+                        // The core is left up, so the next cycle
+                        // reloads it in place onto the new candidate
+                        // and the old tunnel serves until then.
+                        skipIds.add(connectedId)
+                        AppLog.log("vpn", "user switch: skipping $connectedId for this session")
                     }
                     MonitorOutcome.DIED -> {
                         val elapsedMs = (System.currentTimeMillis() - connectedAt).toInt()
@@ -411,7 +456,7 @@ class AutoConnectVpnService : VpnService() {
         var consecutiveFailures = 0
         while (!stopRequested) {
             var waited = 0L
-            while (waited < HEALTH_INTERVAL_MS && !stopRequested && !networkChanged) {
+            while (waited < HEALTH_INTERVAL_MS && !stopRequested && !networkChanged && !switchRequested) {
                 Thread.sleep(1_000)
                 waited += 1_000
             }
@@ -419,6 +464,10 @@ class AutoConnectVpnService : VpnService() {
             if (networkChanged) {
                 networkChanged = false
                 return MonitorOutcome.NETWORK_CHANGED
+            }
+            if (switchRequested) {
+                switchRequested = false
+                return MonitorOutcome.SWITCH
             }
             when (probeThroughTunnel()) {
                 ProbeResult.OK -> consecutiveFailures = 0
