@@ -53,4 +53,6 @@
     <string name="leak_value_risk">نشت دارد</string>
     <string name="leak_value_unknown">نامشخص</string>
     <string name="switch_config">تعویض کانفیگ</string>
+    <string name="status_label">وضعیت:</string>
+    <string name="server_auto">اتصال خودکار</string>
 </resources>

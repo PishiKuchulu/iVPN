@@ -52,4 +52,6 @@
     <string name="leak_value_risk">Leaking</string>
     <string name="leak_value_unknown">Unknown</string>
     <string name="switch_config">Switch config</string>
+    <string name="status_label">Status:</string>
+    <string name="server_auto">Automatic connection</string>
 </resources>

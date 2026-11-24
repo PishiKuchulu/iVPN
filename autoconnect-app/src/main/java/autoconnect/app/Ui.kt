@@ -5,7 +5,9 @@ import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RadialGradient
 import android.graphics.RectF
+import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
@@ -52,40 +54,50 @@ object Ui {
         val green: Int,
         val red: Int,
         val amber: Int,
+        val accent: Int,
+        val gold: Int,
         val powerIdle: Int,
         val powerBusy: Int,
         val powerConnected: Int,
         val onPower: Int,
     )
 
+    // Reference-design restyle (2026-11-24, Farzad's chosen UI): a
+    // near-black green-tinted theme, mint accent, gold highlights and
+    // a glowing power button. The dark palette is the reference
+    // itself; the light palette adapts the same language.
     private val LIGHT = Palette(
-        bg = 0xFFF7F8FA.toInt(),
+        bg = 0xFFF0F5F1.toInt(),
         card = 0xFFFFFFFF.toInt(),
-        cardStroke = 0xFFE2E8F0.toInt(),
-        textPrimary = 0xFF0F172A.toInt(),
-        textSecondary = 0xFF64748B.toInt(),
-        green = 0xFF15803D.toInt(),
+        cardStroke = 0xFFD9E4DC.toInt(),
+        textPrimary = 0xFF0E1A13.toInt(),
+        textSecondary = 0xFF5B7267.toInt(),
+        green = 0xFF0E9F6E.toInt(),
         red = 0xFFDC2626.toInt(),
         amber = 0xFFB45309.toInt(),
-        powerIdle = 0xFF1E3A5F.toInt(),
-        powerBusy = 0xFFB45309.toInt(),
-        powerConnected = 0xFF15803D.toInt(),
-        onPower = 0xFFFFFFFF.toInt(),
+        accent = 0xFF0E9F6E.toInt(),
+        gold = 0xFFB45309.toInt(),
+        powerIdle = 0xFF14301F.toInt(),
+        powerBusy = 0xFF4A3208.toInt(),
+        powerConnected = 0xFF0C2318.toInt(),
+        onPower = 0xFFE9F2ED.toInt(),
     )
 
     private val DARK = Palette(
-        bg = 0xFF0B1220.toInt(),
-        card = 0xFF16233C.toInt(),
-        cardStroke = 0xFF263449.toInt(),
-        textPrimary = 0xFFF1F5F9.toInt(),
-        textSecondary = 0xFF94A3B8.toInt(),
-        green = 0xFF4ADE80.toInt(),
+        bg = 0xFF070B09.toInt(),
+        card = 0xFF0F1512.toInt(),
+        cardStroke = 0xFF1E2B23.toInt(),
+        textPrimary = 0xFFE9F2ED.toInt(),
+        textSecondary = 0xFF8CA398.toInt(),
+        green = 0xFF2EE6A8.toInt(),
         red = 0xFFF87171.toInt(),
-        amber = 0xFFFBBF24.toInt(),
-        powerIdle = 0xFF2F5D8A.toInt(),
-        powerBusy = 0xFFD97706.toInt(),
-        powerConnected = 0xFF1F9D55.toInt(),
-        onPower = 0xFFFFFFFF.toInt(),
+        amber = 0xFFF2C14E.toInt(),
+        accent = 0xFF2EE6A8.toInt(),
+        gold = 0xFFF2C14E.toInt(),
+        powerIdle = 0xFF131B16.toInt(),
+        powerBusy = 0xFF171208.toInt(),
+        powerConnected = 0xFF0A140F.toInt(),
+        onPower = 0xFFE9F2ED.toInt(),
     )
 
     /** Mirrors [BaseActivity]'s theme decision so tokens match the window. */
@@ -166,6 +178,80 @@ object Ui {
             setColor(fill)
             setStroke(dp(context, 3), Color.argb(38, 255, 255, 255))
         }
+
+    /** Power-button surface in the reference design: dark fill with a
+     *  colored rim that carries the phase (mint = connected). */
+    fun powerBackground(context: Context, fill: Int, stroke: Int): GradientDrawable =
+        GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(fill)
+            setStroke(dp(context, 2), stroke)
+        }
+
+    /** Full-width mint pill — the reference design's primary action. */
+    fun pillButton(context: Context, label: String, action: () -> Unit): Button = Button(context).apply {
+        text = label
+        textSize = TEXT_BODY
+        typeface = Typeface.DEFAULT_BOLD
+        isAllCaps = false
+        gravity = Gravity.CENTER
+        setPadding(dp(context, SPACE_M), dp(context, 15), dp(context, SPACE_M), dp(context, 15))
+        setTextColor(0xFF06231A.toInt())
+        background = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = dp(context, 28).toFloat()
+            setColor(palette(context).accent)
+        }
+        setOnClickListener { action() }
+    }
+}
+
+/**
+ * The reference design's signature element: a soft radial glow with
+ * two concentric rings behind the power button. [glowLevel] runs
+ * 0 (invisible) to 1 (full); the activity pulses it while connecting
+ * and holds it at full while connected.
+ */
+class GlowRingView(context: Context) : View(context) {
+
+    var glowColor: Int = Color.GREEN
+
+    var glowLevel: Float = 0f
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        if (glowLevel <= 0.01f) return
+        val cx = width / 2f
+        val cy = height / 2f
+        val maxR = min(width, height) / 2f
+        if (maxR <= 0f) return
+        val r = Color.red(glowColor)
+        val g = Color.green(glowColor)
+        val b = Color.blue(glowColor)
+
+        val glowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            shader = RadialGradient(
+                cx, cy, maxR,
+                Color.argb((115 * glowLevel).toInt(), r, g, b),
+                Color.argb(0, r, g, b),
+                Shader.TileMode.CLAMP,
+            )
+        }
+        canvas.drawCircle(cx, cy, maxR, glowPaint)
+
+        val ringPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            strokeWidth = 2f * resources.displayMetrics.density
+        }
+        ringPaint.color = Color.argb((70 * glowLevel).toInt(), r, g, b)
+        canvas.drawCircle(cx, cy, maxR * 0.80f, ringPaint)
+        ringPaint.color = Color.argb((38 * glowLevel).toInt(), r, g, b)
+        canvas.drawCircle(cx, cy, maxR * 0.94f, ringPaint)
+    }
 }
 
 /**

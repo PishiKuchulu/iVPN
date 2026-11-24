@@ -26,11 +26,15 @@ import java.util.Locale
 class MainActivity : BaseActivity() {
 
     private lateinit var statusView: TextView
-    private lateinit var durationView: TextView
-    private lateinit var flagView: TextView
+    private lateinit var serverFlagView: TextView
+    private lateinit var serverPrimaryView: TextView
+    private lateinit var serverSecondaryView: TextView
+    private lateinit var glowView: GlowRingView
+    private lateinit var powerGlyph: PowerGlyphView
     private lateinit var switchButton: View
     private lateinit var powerCircle: LinearLayout
     private lateinit var powerLabel: TextView
+    private var pulseAnimator: android.animation.ValueAnimator? = null
     private lateinit var detailsCard: LinearLayout
     private val handler = Handler(Looper.getMainLooper())
 
@@ -73,72 +77,104 @@ class MainActivity : BaseActivity() {
         header.addView(settingsButton, LinearLayout.LayoutParams(-2, -2))
         root.addView(header, LinearLayout.LayoutParams(-1, -2))
 
-        // Round power button: glyph + phase label inside a filled circle.
+        // Server row (reference design): the connected country as
+        // its flag only, the measured exit IP, and the operator.
+        val serverCard = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            val p = Ui.dp(this@MainActivity, 14)
+            setPadding(p, p, p, p)
+            background = Ui.cardBackground(this@MainActivity)
+        }
+        serverFlagView = TextView(this).apply { textSize = 30f }
+        serverCard.addView(serverFlagView, LinearLayout.LayoutParams(-2, -2))
+        val serverTexts = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        serverPrimaryView = TextView(this).apply {
+            textSize = 14f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(pal.textPrimary)
+        }
+        serverSecondaryView = TextView(this).apply {
+            textSize = Ui.TEXT_SMALL
+            setTextColor(pal.textSecondary)
+        }
+        serverTexts.addView(serverPrimaryView, LinearLayout.LayoutParams(-2, -2))
+        serverTexts.addView(serverSecondaryView, LinearLayout.LayoutParams(-2, -2).apply {
+            topMargin = Ui.dp(this@MainActivity, 2)
+        })
+        serverCard.addView(serverTexts, LinearLayout.LayoutParams(0, -2, 1f).apply {
+            marginStart = Ui.dp(this@MainActivity, 12)
+        })
+        root.addView(serverCard, LinearLayout.LayoutParams(-1, -2).apply {
+            topMargin = Ui.dp(this@MainActivity, Ui.SPACE_M)
+        })
+
+        // Status line (reference design): muted label + colored value.
+        val statusRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+        }
+        statusRow.addView(TextView(this).apply {
+            text = getString(R.string.status_label)
+            textSize = Ui.TEXT_BODY
+            setTextColor(pal.textSecondary)
+        }, LinearLayout.LayoutParams(-2, -2))
+        statusView = TextView(this).apply {
+            textSize = Ui.TEXT_STATUS
+            typeface = Typeface.DEFAULT_BOLD
+        }
+        statusRow.addView(statusView, LinearLayout.LayoutParams(-2, -2).apply {
+            marginStart = Ui.dp(this@MainActivity, 6)
+        })
+        root.addView(statusRow, LinearLayout.LayoutParams(-1, -2).apply {
+            topMargin = Ui.dp(this@MainActivity, Ui.SPACE_L)
+        })
+
+        // Glowing power button (reference design): concentric glow
+        // rings behind a dark circle; while connected, the session
+        // timer lives inside the circle under the glyph.
         powerLabel = TextView(this).apply {
             textSize = 16f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setTextColor(pal.onPower)
+            setTextColor(pal.textPrimary)
         }
-        val glyph = PowerGlyphView(this).apply { glyphColor = pal.onPower }
+        powerGlyph = PowerGlyphView(this).apply { glyphColor = pal.onPower }
         powerCircle = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
             isClickable = true
             isFocusable = true
-            addView(glyph, LinearLayout.LayoutParams(Ui.dp(this@MainActivity, 72), Ui.dp(this@MainActivity, 72)))
+            addView(powerGlyph, LinearLayout.LayoutParams(Ui.dp(this@MainActivity, 72), Ui.dp(this@MainActivity, 72)))
             addView(powerLabel, LinearLayout.LayoutParams(-2, -2).apply {
                 topMargin = Ui.dp(this@MainActivity, Ui.SPACE_S)
             })
             setOnClickListener { onConnectTapped() }
         }
+        val powerAssembly = android.widget.FrameLayout(this)
+        glowView = GlowRingView(this)
+        powerAssembly.addView(glowView, android.widget.FrameLayout.LayoutParams(-1, -1))
         val powerSize = Ui.dp(this, 184)
-        root.addView(powerCircle, LinearLayout.LayoutParams(powerSize, powerSize).apply {
-            topMargin = Ui.dp(this@MainActivity, 56)
-        })
-
-        statusView = TextView(this).apply {
-            textSize = Ui.TEXT_STATUS
+        powerAssembly.addView(powerCircle, android.widget.FrameLayout.LayoutParams(powerSize, powerSize).apply {
             gravity = Gravity.CENTER
-        }
-        root.addView(statusView, LinearLayout.LayoutParams(-1, -2).apply {
-            topMargin = Ui.dp(this@MainActivity, Ui.SPACE_L)
         })
-
-        durationView = TextView(this).apply {
-            textSize = Ui.TEXT_DETAIL
-            gravity = Gravity.CENTER
-            setTextColor(pal.textSecondary)
-            visibility = View.GONE
-        }
-        root.addView(durationView, LinearLayout.LayoutParams(-1, -2).apply {
+        val assemblySize = Ui.dp(this, 264)
+        root.addView(powerAssembly, LinearLayout.LayoutParams(assemblySize, assemblySize).apply {
+            gravity = Gravity.CENTER_HORIZONTAL
             topMargin = Ui.dp(this@MainActivity, Ui.SPACE_S)
         })
 
-        // Connected-country flag (2026-11-24): the exit country,
-        // measured live through the tunnel by the leak check, shown
-        // as its flag ONLY — no country name anywhere in the UI.
-        flagView = TextView(this).apply {
-            textSize = 44f
-            gravity = Gravity.CENTER
-            visibility = View.GONE
-        }
-        root.addView(flagView, LinearLayout.LayoutParams(-1, -2).apply {
-            topMargin = Ui.dp(this@MainActivity, Ui.SPACE_S)
-        })
-
-        // Switch-to-next-config button (2026-11-24): visible only
-        // while connected; the service treats a switch as a
+        // Switch-to-next-config: the reference's mint pill, visible
+        // only while connected; the service treats a switch as a
         // preference, never as a failure of the current config.
-        switchButton = Ui.cardButton(this, getString(R.string.switch_config)) {
+        switchButton = Ui.pillButton(this, getString(R.string.switch_config)) {
             val intent = Intent(this@MainActivity, AutoConnectVpnService::class.java).apply {
                 action = AutoConnectVpnService.ACTION_SWITCH
             }
             if (Build.VERSION.SDK_INT >= 26) startForegroundService(intent) else startService(intent)
         }
         switchButton.visibility = View.GONE
-        root.addView(switchButton, LinearLayout.LayoutParams(-2, -2).apply {
-            gravity = Gravity.CENTER_HORIZONTAL
+        root.addView(switchButton, LinearLayout.LayoutParams(-1, -2).apply {
             topMargin = Ui.dp(this@MainActivity, Ui.SPACE_M)
         })
 
@@ -159,6 +195,7 @@ class MainActivity : BaseActivity() {
         AppState.removeListener(stateListener)
         handler.removeCallbacks(ticker)
         tickerRunning = false
+        stopPulse()
         super.onDestroy()
     }
 
@@ -178,45 +215,82 @@ class MainActivity : BaseActivity() {
             ConnectionPhase.STOPPING -> getString(R.string.status_stopping)
             ConnectionPhase.IDLE -> getString(R.string.status_idle)
         }
-        // Semantic status colors (green = connected, red = failed, amber =
-        // in-progress, neutral = idle). Color never carries meaning alone —
-        // the status text always says the same thing in words.
+        // Status colors in the reference design (gold = connected,
+        // red = failed, amber = in-progress, muted = idle). Color
+        // never carries meaning alone — the status text always says
+        // the same thing in words.
         statusView.setTextColor(
             when (phase) {
-                ConnectionPhase.CONNECTED -> pal.green
+                ConnectionPhase.CONNECTED -> pal.gold
                 ConnectionPhase.FAILED -> pal.red
                 ConnectionPhase.CONNECTING, ConnectionPhase.STOPPING -> pal.amber
                 ConnectionPhase.IDLE -> pal.textSecondary
             }
         )
 
-        // Power button: fill + label follow the phase; the tap handler is
-        // the same one the old rectangular button used.
-        powerCircle.background = Ui.circleBackground(
+        // Power button: dark fill with a phase-colored rim and glyph;
+        // while connected the label becomes the session timer.
+        val rim = when (phase) {
+            ConnectionPhase.CONNECTED -> pal.accent
+            ConnectionPhase.FAILED -> pal.red
+            ConnectionPhase.CONNECTING, ConnectionPhase.STOPPING -> pal.amber
+            ConnectionPhase.IDLE -> pal.cardStroke
+        }
+        powerCircle.background = Ui.powerBackground(
             this,
             when (phase) {
                 ConnectionPhase.CONNECTED -> pal.powerConnected
                 ConnectionPhase.CONNECTING, ConnectionPhase.STOPPING -> pal.powerBusy
                 else -> pal.powerIdle
             },
+            rim,
         )
+        powerGlyph.glyphColor = rim
         powerLabel.text = when (phase) {
             ConnectionPhase.CONNECTED -> getString(R.string.disconnect)
             ConnectionPhase.CONNECTING -> getString(R.string.connecting_label)
             ConnectionPhase.STOPPING -> getString(R.string.stopping_label)
             else -> getString(R.string.connect)
         }
-        powerCircle.contentDescription = powerLabel.text
+        powerCircle.contentDescription =
+            if (phase == ConnectionPhase.CONNECTED) getString(R.string.disconnect) else powerLabel.text
 
-        updateDuration()
-        switchButton.visibility = if (phase == ConnectionPhase.CONNECTED) View.VISIBLE else View.GONE
+        // Glow: full while connected, pulsing while connecting.
+        glowView.glowColor = pal.accent
+        when (phase) {
+            ConnectionPhase.CONNECTED -> {
+                stopPulse()
+                glowView.glowLevel = 1f
+            }
+            ConnectionPhase.CONNECTING -> startPulse()
+            ConnectionPhase.STOPPING -> {
+                stopPulse()
+                glowView.glowLevel = 0.3f
+            }
+            else -> {
+                stopPulse()
+                glowView.glowLevel = 0f
+            }
+        }
+
+        // Server row: the country as its flag only (never a name);
+        // the primary line is the measured exit IP once connected.
         val flag = if (phase == ConnectionPhase.CONNECTED) {
             LeakCheck.flagEmoji(AppState.exitCountryCode)
         } else {
             null
         }
-        flagView.text = flag ?: ""
-        flagView.visibility = if (flag != null) View.VISIBLE else View.GONE
+        serverFlagView.text = flag ?: "🌐"
+        serverPrimaryView.text =
+            if (phase == ConnectionPhase.CONNECTED && AppState.leakExitIp != null) {
+                AppState.leakExitIp
+            } else {
+                getString(R.string.server_auto)
+            }
+        serverSecondaryView.text = AppState.operatorKey
+
+        updateDuration()
+        switchButton.visibility = if (phase == ConnectionPhase.CONNECTED) View.VISIBLE else View.GONE
         if (phase == ConnectionPhase.CONNECTED && !tickerRunning) {
             tickerRunning = true
             handler.postDelayed(ticker, 1000)
@@ -225,14 +299,29 @@ class MainActivity : BaseActivity() {
         rebuildDetailsCard()
     }
 
+    private fun startPulse() {
+        if (pulseAnimator != null) return
+        pulseAnimator = android.animation.ValueAnimator.ofFloat(0.3f, 0.8f).apply {
+            duration = 900
+            repeatMode = android.animation.ValueAnimator.REVERSE
+            repeatCount = android.animation.ValueAnimator.INFINITE
+            addUpdateListener { glowView.glowLevel = it.animatedValue as Float }
+            start()
+        }
+    }
+
+    private fun stopPulse() {
+        pulseAnimator?.cancel()
+        pulseAnimator = null
+    }
+
+    /** While connected, the in-button label is the session timer
+     *  (the reference design keeps it inside the power circle). */
     private fun updateDuration() {
+        if (AppState.phase != ConnectionPhase.CONNECTED) return
         val since = AppState.connectedSinceMs
-        if (AppState.phase == ConnectionPhase.CONNECTED && since > 0L) {
-            durationView.text =
-                "${getString(R.string.session_duration)}: ${formatElapsed(System.currentTimeMillis() - since)}"
-            durationView.visibility = View.VISIBLE
-        } else {
-            durationView.visibility = View.GONE
+        if (since > 0L) {
+            powerLabel.text = formatElapsed(System.currentTimeMillis() - since)
         }
     }
 

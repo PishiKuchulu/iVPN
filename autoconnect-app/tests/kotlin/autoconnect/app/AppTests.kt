@@ -672,6 +672,29 @@ private fun r17ExitFlag() {
     check("R17: bundle country lookup is gone", !act.contains("maybeLoadExitCountry"))
 }
 
+// ------------------------------------------ R18: reference-design restyle
+
+private fun r18ReferenceUi() {
+    val ui = File("src/main/java/autoconnect/app/Ui.kt").readText()
+    check("R18: mint accent token present", ui.contains("2EE6A8"))
+    check("R18: gold token present", ui.contains("F2C14E"))
+    check("R18: glow ring view exists", ui.contains("class GlowRingView"))
+    check("R18: pill button builder exists", ui.contains("fun pillButton"))
+    check("R18: power background builder exists", ui.contains("fun powerBackground"))
+
+    val act = File("src/main/java/autoconnect/app/MainActivity.kt").readText()
+    check("R18: glow view is used", act.contains("GlowRingView"))
+    check("R18: server row flag view exists", act.contains("serverFlagView"))
+    check("R18: server row falls back to a globe, never a name", act.contains("flag ?: \"🌐\""))
+    check("R18: server row primary line is the measured exit IP", act.contains("AppState.leakExitIp"))
+    check("R18: status label string used", act.contains("R.string.status_label"))
+    check("R18: automatic-connection string used", act.contains("R.string.server_auto"))
+    check("R18: switch is the mint pill", act.contains("Ui.pillButton"))
+    check("R18: session timer lives in the power button", act.contains("powerLabel.text = formatElapsed"))
+    check("R18: standalone duration view removed", !act.contains("durationView"))
+    check("R18: standalone flag view removed", !act.contains("private lateinit var flagView"))
+}
+
 // ---------------------------------------------------------------- main
 
 fun main() {
@@ -695,6 +718,7 @@ fun main() {
     r15LeakCheck()
     r16UserSwitch()
     r17ExitFlag()
+    r18ReferenceUi()
 
     println("AppTests: $passed passed, $failed failed, ${passed + failed} total")
     if (failed > 0) {
