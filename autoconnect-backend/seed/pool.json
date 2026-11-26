@@ -176,6 +176,30 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:070fe75ee556ee4aebfccba3f9b34b0cb5d5f52d98166db5e182e2681d1076b1": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "5c040f1d-45db-43bd-8d46-e4950e433735",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:070fe75ee556ee4aebfccba3f9b34b0cb5d5f52d98166db5e182e2681d1076b1",
+        "operator_scores": {},
+        "port": 1270,
+        "protocol": "vmess",
+        "server": "leviko-se3307.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "sni": "xmfhlpy.com"
+        },
+        "transport": {
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:0725461a76f73d50359efb40435422ecd1f8b2b5902a38ffe9162bf3ccf1f328": {
       "first_seen": "2026-11-24T11:08:52Z",
       "last_seen": "2026-11-24T11:08:52Z",
@@ -196,6 +220,37 @@
           "header_type": "---",
           "path": "/vmess/",
           "type": "ws"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:07b55b7ec4688e3b287a83f6bad93b412a7e0d9ee3d3b8a5edd075102e049d7c": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "920b3cd9-4f82-4669-bbd2-d4a28b9052c6",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:07b55b7ec4688e3b287a83f6bad93b412a7e0d9ee3d3b8a5edd075102e049d7c",
+        "operator_scores": {},
+        "port": 9543,
+        "protocol": "vless",
+        "server": "leviko-de2771.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc",
+            "short_id": "123abcdf"
+          },
+          "sni": "storage.yandexcloud.net"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
         }
       },
       "sources": [
@@ -316,6 +371,65 @@
             "short_id": "123abcdf"
           },
           "sni": "storage.yandexcloud.net"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:0ea8cc98dc8f2e256666f8960e3d5fa926e3236a1398e6e57fb8b18ca9131f6c": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "26843758-24de-4f76-b5d0-624038e353c4",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:0ea8cc98dc8f2e256666f8960e3d5fa926e3236a1398e6e57fb8b18ca9131f6c",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "79.182.70.192",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "xv6OUZcyzEHXFMTfumuJH-1Rd4NQ0cdmWikek4mm0m4",
+            "short_id": "c71118d9399fb8c2"
+          },
+          "sni": "15d7fft.nl11.h1clayd.click"
+        },
+        "transport": {
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:11271e972aea1577e2025588da3a6d6d94ea0306ac80c6284e0e0c070e810bb7": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "148917bd-0b37-42b8-98f4-aa94ca73e75a",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:11271e972aea1577e2025588da3a6d6d94ea0306ac80c6284e0e0c070e810bb7",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "170.168.32.125",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "tp7awfnKLbhIDkdYlT7Avf-SfUwt7ncX5oyWS5wQmR0",
+            "short_id": "6d"
+          },
+          "sni": "travel.yandex.ru"
         },
         "transport": {
           "flow": "xtls-rprx-vision",
@@ -448,6 +562,60 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:1bf8473105bb8c307dc186fecf682e23bc24ceb41e48eeceb50794aba374175e": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "a346c521-7a7f-452b-9356-a4893feb5982",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:1bf8473105bb8c307dc186fecf682e23bc24ceb41e48eeceb50794aba374175e",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "78.17.215.141",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "FWitre1jinQR7qz5HQ0q2Q4Gg9xA9B0SyizCziN7Ch0",
+            "short_id": "457fab2ac885dbe0"
+          },
+          "sni": "de15-r.bankai.party"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:1ef1ac62c3e6115f291c3ec339bad878f3018f36bad28dc76b882bd87604236d": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "FastKey_446172",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:1ef1ac62c3e6115f291c3ec339bad878f3018f36bad28dc76b882bd87604236d",
+        "operator_scores": {},
+        "port": 8080,
+        "protocol": "vless",
+        "server": "89.125.136.56",
+        "source_count": 1,
+        "tls": {
+          "enabled": false
+        },
+        "transport": {
+          "service_name": "api",
+          "type": "grpc"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:20c8e1c4b2f5ba2a3ea1b272f1be937727fbf0e8a40fee7a9e511d9e322860e1": {
       "first_seen": "2026-11-23T12:20:52Z",
       "last_seen": "2026-11-23T12:29:45Z",
@@ -570,6 +738,38 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:29b1a4cca2a237ac347cb4315b31bda0a490924b96e13f802a22b5bf872ab66c": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:29b1a4cca2a237ac347cb4315b31bda0a490924b96e13f802a22b5bf872ab66c",
+        "operator_scores": {},
+        "port": 23576,
+        "protocol": "vless",
+        "server": "15.204.97.195",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+            "short_id": "01"
+          },
+          "sni": "fuck.rkn"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "/?",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:2a04e6ee1dcd5b39662e8aec574ed3bd33da5ce86055806443ea6ad9373508d2": {
       "first_seen": "2026-11-23T12:20:52Z",
       "last_seen": "2026-11-24T11:08:52Z",
@@ -657,7 +857,7 @@
     },
     "sha256:2e28556a7f581b26c008152b7fa9366eb0e84b62bc8fd2e3240d69a94de04862": {
       "first_seen": "2026-11-23T12:20:52Z",
-      "last_seen": "2026-11-23T12:29:45Z",
+      "last_seen": "2026-11-26T15:38:19Z",
       "record": {
         "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
         "first_seen": "2026-11-23T12:20:52Z",
@@ -718,6 +918,62 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:2f5605251c92253fe9dee1dc8f25050ebeb6b53ca6a4d4f270f361caa77df171": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "XpnTeam-6",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:2f5605251c92253fe9dee1dc8f25050ebeb6b53ca6a4d4f270f361caa77df171",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "167.82.64.7",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "sni": "cdn.akamai.steamstatic.com"
+        },
+        "transport": {
+          "host": "Wssmx.global.ssl.fastly.net",
+          "path": "/",
+          "type": "splithttp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:2f6a04f787634b349e8f6881f82745b0eb1889118301b1b25d021723d3f936fc": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "37af0181-5598-4aad-a040-d926bcb65757",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:2f6a04f787634b349e8f6881f82745b0eb1889118301b1b25d021723d3f936fc",
+        "operator_scores": {},
+        "port": 445,
+        "protocol": "vless",
+        "server": "78.159.240.11",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "firefox",
+          "reality": {
+            "enabled": true,
+            "public_key": "VHWmCkZwC5XE-ctv0p8BinjoIx4SWgJUIsZPrhNf6TA"
+          },
+          "sni": "passport.yandex.ru"
+        },
+        "transport": {
+          "service_name": "grpc",
+          "type": "grpc"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:3228303b5c740edcc3ed33615f367a6d75143e5092f8232375092e6015c7078f": {
       "first_seen": "2026-11-23T12:20:52Z",
       "last_seen": "2026-11-23T12:29:45Z",
@@ -771,6 +1027,85 @@
       },
       "sources": [
         "bootstrap",
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:32702f1aeeb348b200128a9cb86955fde2df94207f658275533429ef91dfb2d3": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "490dc3b4-8d1d-49fd-840e-bd5277b41557",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:32702f1aeeb348b200128a9cb86955fde2df94207f658275533429ef91dfb2d3",
+        "operator_scores": {},
+        "port": 2083,
+        "protocol": "vless",
+        "server": "leviko-hk5267.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "enabled": false
+        },
+        "transport": {
+          "service_name": "service-41f6a2a01377",
+          "type": "grpc"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:3280c851cbfa088d6db0a0669b1f7a92eb1ea13014e3d913b59c7c34bed5892c": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "56665684-5ac0-4ba9-9d49-8b258fb57974",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:3280c851cbfa088d6db0a0669b1f7a92eb1ea13014e3d913b59c7c34bed5892c",
+        "operator_scores": {},
+        "port": 50738,
+        "protocol": "vless",
+        "server": "leviko-tr3795.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "enabled": true,
+          "fingerprint": "chrome",
+          "sni": "turkey-ip1.mmdaqaorg.xyz"
+        },
+        "transport": {
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:34c60c9da3128d0b257c9f8d3efdbd25115a08e837be7a5a674ac5c41ee62182": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "7ff1e7e1-2b5a-4e53-ae77-1516f9eb7754",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:34c60c9da3128d0b257c9f8d3efdbd25115a08e837be7a5a674ac5c41ee62182",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "51.194.118.38",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "sni": "a1259.ve8nzuk.com"
+        },
+        "transport": {
+          "service_name": "50a5f706c8ea4433838a207d435fbf031b008a9a",
+          "type": "grpc"
+        }
+      },
+      "sources": [
         "chillguy_vpn"
       ]
     },
@@ -837,6 +1172,57 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:3555ba1b788cc3e5d8d680d991be974f4ba64d616271e4f4be533f9aad9694a4": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "a35c508f-4d5d-4531-842e-6e9d43c762c0",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:3555ba1b788cc3e5d8d680d991be974f4ba64d616271e4f4be533f9aad9694a4",
+        "operator_scores": {},
+        "port": 4443,
+        "protocol": "vless",
+        "server": "179.254.191.251",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "sni": "bl1.nexfile.net"
+        },
+        "transport": {
+          "path": "/api/v1/sync/",
+          "type": "splithttp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:385f7216f34dc2d7d55d2c1095933f0d7a088bc8b3259af55f5aaf641dc2756e": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "2387bfbc-10a6-4bd7-dc55-7cba954ce6e8",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:385f7216f34dc2d7d55d2c1095933f0d7a088bc8b3259af55f5aaf641dc2756e",
+        "operator_scores": {},
+        "port": 59236,
+        "protocol": "vmess",
+        "server": "leviko-ie6364.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "enabled": false
+        },
+        "transport": {
+          "header_type": "http",
+          "path": "/",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:38fa9844f295621f8bb64c0c5827d14a26b879676fb2d1673daaf15c961e884d": {
       "first_seen": "2026-11-24T11:08:52Z",
       "last_seen": "2026-11-24T11:08:52Z",
@@ -889,6 +1275,36 @@
             "short_id": "fa514b83"
           },
           "sni": "swdist.apple.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:3ad164984e826ac2d48a1d1fc29afa249fc5fb39ae00da09f664b9f408eb7f94": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "a346c521-7a7f-452b-9356-a4893feb5982",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:3ad164984e826ac2d48a1d1fc29afa249fc5fb39ae00da09f664b9f408eb7f94",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "leviko-de5717.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "FWitre1jinQR7qz5HQ0q2Q4Gg9xA9B0SyizCziN7Ch0",
+            "short_id": "457fab2ac885dbe0"
+          },
+          "sni": "ee1-r.bankai.party"
         },
         "transport": {
           "flow": "xtls-rprx-vision",
@@ -1015,6 +1431,68 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:4c36a773acc0083a95261cc42f48bcddb34ac02b8c5a712d772af87d19b2bfaf": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "920b3cd9-4f82-4669-bbd2-d4a28b9052c6",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:4c36a773acc0083a95261cc42f48bcddb34ac02b8c5a712d772af87d19b2bfaf",
+        "operator_scores": {},
+        "port": 9543,
+        "protocol": "vless",
+        "server": "leviko-de2416.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "firefox",
+          "reality": {
+            "enabled": true,
+            "public_key": "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc",
+            "short_id": "123abcdf"
+          },
+          "sni": "storage.yandexcloud.net"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:4dcba4c30b2c8a724d4e89567e846d0501bbed148845aed47708c6fd90222967": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "920b3cd9-4f82-4669-bbd2-d4a28b9052c6",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:4dcba4c30b2c8a724d4e89567e846d0501bbed148845aed47708c6fd90222967",
+        "operator_scores": {},
+        "port": 9543,
+        "protocol": "vless",
+        "server": "leviko-de9794.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc",
+            "short_id": "123abcdf"
+          },
+          "sni": "storage.yandexcloud.net"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:4fe96cc8e1172132d79c78442c77837b44630f0b0f561bdfd647dec53ce8a34a": {
       "first_seen": "2026-11-23T12:29:45Z",
       "last_seen": "2026-11-24T11:08:52Z",
@@ -1041,6 +1519,35 @@
           "flow": "xtls-rprx-vision",
           "host": "/?",
           "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:51d6efef917b33fe1c63a91ab23d60d7be217866c4bf0a88343a04fdbbd2dc8a": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "33393561-4c63-416f-91dd-f88efc57c42a",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:51d6efef917b33fe1c63a91ab23d60d7be217866c4bf0a88343a04fdbbd2dc8a",
+        "operator_scores": {},
+        "port": 993,
+        "protocol": "vless",
+        "server": "leviko-de3915.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "alpn": [
+            "http/1.1"
+          ],
+          "enabled": true,
+          "fingerprint": "chrome",
+          "sni": "hw3.modemjibi.com."
+        },
+        "transport": {
+          "path": "/",
+          "type": "ws"
         }
       },
       "sources": [
@@ -1081,7 +1588,7 @@
     },
     "sha256:5a2eb3d96357acc0bf814788e7a688ed15af86e6f733ab588717182a4408c2c1": {
       "first_seen": "2026-11-24T11:08:52Z",
-      "last_seen": "2026-11-24T11:08:52Z",
+      "last_seen": "2026-11-26T15:38:19Z",
       "record": {
         "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
         "first_seen": "2026-11-24T11:08:52Z",
@@ -1140,6 +1647,68 @@
       },
       "sources": [
         "bootstrap",
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:6261f8f3ab0ca6cfd8342dec8f9d84de799cb9e7add8fc16e6ee7f4478baa526": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "2e0697c0-5d99-4502-a001-bb90e6476d2a",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:6261f8f3ab0ca6cfd8342dec8f9d84de799cb9e7add8fc16e6ee7f4478baa526",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "3.141.105.203",
+        "source_count": 2,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "uKTuTKW9v75dRfEvCTO-VwYKi9qB_qyhNdyOpq4ceEo",
+            "short_id": "cd80d90bee24205f"
+          },
+          "sni": "dl.google.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:68c29338ae761b1f2147bc12107b9e877a8560e1b9bbc39cf8fcc556af262645": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "e894c08a-fecc-46f5-bf03-c95d0274c79d",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:68c29338ae761b1f2147bc12107b9e877a8560e1b9bbc39cf8fcc556af262645",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "48.102.207.167",
+        "source_count": 2,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "firefox",
+          "reality": {
+            "enabled": true,
+            "public_key": "MZEux6K9MlKwN9dto2Mj2gGS6IJSEs229nFPh5aYwSQ",
+            "short_id": "32e95dff907cc876"
+          },
+          "sni": "www.google.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
         "chillguy_vpn"
       ]
     },
@@ -1203,6 +1772,29 @@
       },
       "sources": [
         "bootstrap",
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:6e7b1db786d422268ebb1174243476bda49ffa086df1fe197759f1148f19ef8e": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "c38605a8-89ae-4e57-b9b0-35606df2e1a3",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:6e7b1db786d422268ebb1174243476bda49ffa086df1fe197759f1148f19ef8e",
+        "operator_scores": {},
+        "port": 28059,
+        "protocol": "vmess",
+        "server": "194.110.210.41",
+        "source_count": 2,
+        "tls": {
+          "enabled": false
+        },
+        "transport": {
+          "type": "tcp"
+        }
+      },
+      "sources": [
         "chillguy_vpn"
       ]
     },
@@ -1390,9 +1982,39 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:771fc628cda6b37b8d18c3a51eef94fd40e382c05a60fec1eef8a38d2f444c12": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "920b3cd9-4f82-4669-bbd2-d4a28b9052c6",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:771fc628cda6b37b8d18c3a51eef94fd40e382c05a60fec1eef8a38d2f444c12",
+        "operator_scores": {},
+        "port": 9543,
+        "protocol": "vless",
+        "server": "146.103.43.82",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "M6Ck7wUfOLhQl4582CBnaXwscPEP6SCpdEkUDzoj4Fc",
+            "short_id": "123abcdf"
+          },
+          "sni": "storage.yandexcloud.net"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:773ff53ffa09574d51fbc6a8f94f835f2f99b5926e342696054a99d71019eb5d": {
       "first_seen": "2026-11-24T11:08:52Z",
-      "last_seen": "2026-11-24T11:08:52Z",
+      "last_seen": "2026-11-26T15:38:19Z",
       "record": {
         "credential": "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe",
         "first_seen": "2026-11-24T11:08:52Z",
@@ -1401,7 +2023,7 @@
         "port": 18000,
         "protocol": "vmess",
         "server": "169.197.142.22",
-        "source_count": 1,
+        "source_count": 2,
         "tls": {
           "enabled": false
         },
@@ -1474,6 +2096,29 @@
       },
       "sources": [
         "bootstrap",
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:7d34dc0e534b0570dc0a9f4e0428d52b5e6e744ab88450ebbc63434eb9ebfc12": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "c024322f-5a7c-46fb-8c65-976101c67f5b",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:7d34dc0e534b0570dc0a9f4e0428d52b5e6e744ab88450ebbc63434eb9ebfc12",
+        "operator_scores": {},
+        "port": 8080,
+        "protocol": "vmess",
+        "server": "18.190.241.238",
+        "source_count": 1,
+        "tls": {
+          "enabled": false
+        },
+        "transport": {
+          "type": "tcp"
+        }
+      },
+      "sources": [
         "chillguy_vpn"
       ]
     },
@@ -1596,6 +2241,63 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:84cad1788c75b7135591ee8e11a1418591979e5fd4a870a8eea0847610917eeb": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "259ec8bc-5a6b-4b33-8a71-c40e8d150c24",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:84cad1788c75b7135591ee8e11a1418591979e5fd4a870a8eea0847610917eeb",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "h-pl.ok-habits.xyz",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "fNfokzklCF4l_c8k8PciOCjm5ecNoF_sNLjEtaO-xzI",
+            "short_id": "db04ce8bdb8900f1"
+          },
+          "sni": "1.4.8.8"
+        },
+        "transport": {
+          "host": "/?Telegram---@pirozi_ArGaP---@pirozi_ArGaP---@pirozi_ArGaP---@pirozi_ArGaP",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:8721926904dc2362d1479329924569730000ee4fa28f6edeb99d09ce88f0b6bb": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "a35c508f-4d5d-4531-842e-6e9d43c762c0",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:8721926904dc2362d1479329924569730000ee4fa28f6edeb99d09ce88f0b6bb",
+        "operator_scores": {},
+        "port": 4443,
+        "protocol": "vless",
+        "server": "leviko-se7853.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "sni": "swo2.nexfile.net"
+        },
+        "transport": {
+          "host": "swo2.nexfile.net",
+          "path": "/api/v1/sync/",
+          "type": "splithttp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:87fc395ec69c2c9ce8b5836d530cf0f885f9f12bc846c1948814d9f7e7e5a9d1": {
       "first_seen": "2026-11-24T11:08:52Z",
       "last_seen": "2026-11-24T11:08:52Z",
@@ -1658,9 +2360,40 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:8b9edd328716f1d31f5e3ae181f552e8106a79a22511be330685e6b17fda46c1": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "bc058e69-0444-4c7b-98da-bd67f0b143da",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:8b9edd328716f1d31f5e3ae181f552e8106a79a22511be330685e6b17fda46c1",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "130.12.242.106",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "vnjp7zIK2H3CGdjSis_79KXqS6IG-opmpbETPUD-EC8",
+            "short_id": "15affa0af66dfc79"
+          },
+          "sni": "deepl.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "/?",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:8e0843491932793d3d31301cd23b910022a00aedf7967a0ebdea101568ea3185": {
       "first_seen": "2026-11-24T11:08:52Z",
-      "last_seen": "2026-11-24T11:08:52Z",
+      "last_seen": "2026-11-26T15:38:19Z",
       "record": {
         "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
         "first_seen": "2026-11-24T11:08:52Z",
@@ -1683,6 +2416,34 @@
         "transport": {
           "flow": "xtls-rprx-vision",
           "host": "/?",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:8ecc30db00149e05fa6421038931a6a84a49502b035eb876dc0e021cf5e832be": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "04920673-035c-410d-94e4-5b1469d3fb6f",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:8ecc30db00149e05fa6421038931a6a84a49502b035eb876dc0e021cf5e832be",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "leviko-nl4822.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "alpn": [
+            "h2",
+            "http/1.1"
+          ],
+          "enabled": true
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
           "type": "tcp"
         }
       },
@@ -1715,6 +2476,38 @@
         "transport": {
           "flow": "xtls-rprx-vision",
           "host": "/?TELEGRAM---MARAMBASHI---MARAMBASHI---MARAMBASHI---MARAMBASHI",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:98eb5f7d63d9131b397ded2e1505812991aff6ecfeaca93699f65d5e84ff75a3": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "bc93a03d-13b5-0004-8ee7-d50c11459dab",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:98eb5f7d63d9131b397ded2e1505812991aff6ecfeaca93699f65d5e84ff75a3",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "109.106.15.99",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "6VMgXXhZdJCiOG05EyK_zTHh00kpFGrZJeZIEPgqhjY",
+            "short_id": "1c3e8241a8743df9"
+          },
+          "sni": "key-master-saver.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "key-master-saver.com/?",
           "type": "tcp"
         }
       },
@@ -1779,6 +2572,98 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:9cadadb92a98a04ba79242210f121261c76baf54c14ca8a46bf375353075e78e": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:9cadadb92a98a04ba79242210f121261c76baf54c14ca8a46bf375353075e78e",
+        "operator_scores": {},
+        "port": 23576,
+        "protocol": "vless",
+        "server": "62.210.91.2",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "firefox",
+          "reality": {
+            "enabled": true,
+            "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+            "short_id": "01"
+          },
+          "sni": "fuck.rkn"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "/?",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:9dfbe516f49a7c8b8a4565a3156b34a868551e640713c9625cf6f8d487391005": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "06252225-3f07-4c5b-a38e-5a68717bb07d",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:9dfbe516f49a7c8b8a4565a3156b34a868551e640713c9625cf6f8d487391005",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "92.223.124.62",
+        "source_count": 1,
+        "tls": {
+          "alpn": [
+            "h2"
+          ],
+          "enabled": true,
+          "sni": "gcore.com"
+        },
+        "transport": {
+          "host": "my-site-vgbho7ei.gcorecdn.com",
+          "path": "/sakeneko?ed=2048",
+          "type": "splithttp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:a0064795d4de4c7362e3fdfc3ce19e71d04360fb886b01fd58ddf5963df9d1f3": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "2e0697c0-5d99-4502-a001-bb90e6476d2a",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:a0064795d4de4c7362e3fdfc3ce19e71d04360fb886b01fd58ddf5963df9d1f3",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "18.225.235.105",
+        "source_count": 2,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "uKTuTKW9v75dRfEvCTO-VwYKi9qB_qyhNdyOpq4ceEo",
+            "short_id": "cd80d90bee24205f"
+          },
+          "sni": "dl.google.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:a05b56c25bec1cb1f39e45588ef994bc9eac404dde66cd48b8ff390defd03d3e": {
       "first_seen": "2026-11-23T12:29:45Z",
       "last_seen": "2026-11-23T12:29:45Z",
@@ -1804,6 +2689,62 @@
         "transport": {
           "flow": "xtls-rprx-vision",
           "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:a0675b08a91fc16bc119c90088c3ab238c1f89f51a29fce801403634869e21d1": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "055a1ce8-2a16-4a0d-a2c2-22826c9b2413",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:a0675b08a91fc16bc119c90088c3ab238c1f89f51a29fce801403634869e21d1",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "47.253.226.114",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "Svl81isn16RPAFnjtmYw7A6TPnsEPLHuYYaJht65Rzc"
+          },
+          "sni": "www.cloudflare.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "/?TELEGRAM---MARAMBASHI---MARAMBASHI---MARAMBASHI---MARAMBASHI",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:a219de34aadf17717d5eace88137e2a6e83c39ac3debd55f311e0f04ac20582b": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "b2fe1fa4-6a79-4938-a3f4-63b54ae7f16b",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:a219de34aadf17717d5eace88137e2a6e83c39ac3debd55f311e0f04ac20582b",
+        "operator_scores": {},
+        "port": 48115,
+        "protocol": "vless",
+        "server": "leviko-se4581.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "sni": "138-124-86-230.sslip.io"
+        },
+        "transport": {
+          "service_name": "138-124-86-230-sslip-io",
+          "type": "grpc"
         }
       },
       "sources": [
@@ -1840,6 +2781,36 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:ae0b00859dfacb93fc75c51769ba88b4fa6849be608fa22ebd924b98b12fc193": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "d65cc14c-f53f-4fe2-b262-97856601319c",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:ae0b00859dfacb93fc75c51769ba88b4fa6849be608fa22ebd924b98b12fc193",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "45.144.112.55",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg",
+            "short_id": "c39cc7310a"
+          },
+          "sni": "yahoo.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:af578dfe4bd2665859dc8534b31f2c7edda52d60ce703ab381da3dc612d5f3c8": {
       "first_seen": "2026-11-24T11:08:52Z",
       "last_seen": "2026-11-24T11:08:52Z",
@@ -1861,6 +2832,37 @@
             "short_id": "01"
           },
           "sni": "fuck.rkn"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:af6eaca38a280c842c1baab12ff312317ae6bf1d78d3c7dba4f72441fd319122": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "ca21222b-caf1-4418-b404-345ea713daa4",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:af6eaca38a280c842c1baab12ff312317ae6bf1d78d3c7dba4f72441fd319122",
+        "operator_scores": {},
+        "port": 2092,
+        "protocol": "vless",
+        "server": "185.71.216.177",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "zeyIqmHylDrPbbtdG9BleBt0-fqKCHpZ0OZ9OY2_WUI",
+            "short_id": "716b7eba38125f3a"
+          },
+          "sni": "www.apple.com"
         },
         "transport": {
           "flow": "xtls-rprx-vision",
@@ -1935,6 +2937,38 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:b64a3886d166d22603c693305748b8bcb29139d0a36c4b71150d970025e5afec": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "e894c08a-fecc-46f5-bf03-c95d0274c79d",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:b64a3886d166d22603c693305748b8bcb29139d0a36c4b71150d970025e5afec",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "48.102.207.172",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "firefox",
+          "reality": {
+            "enabled": true,
+            "public_key": "iZOSshApMLZQ_qeN8ra7h_y9ig2P5yHHiKcN_6kxNmU",
+            "short_id": "3a75d125d1a41392"
+          },
+          "sni": "www.google.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "/?Telegram---@pirozi_ArGaP---@pirozi_ArGaP---@pirozi_ArGaP---@pirozi_ArGaP",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:b6bd084ca96a88d93735ad04060342138fe83d3b6305e090552ddb7887bf1df3": {
       "first_seen": "2026-11-24T11:08:52Z",
       "last_seen": "2026-11-24T11:08:52Z",
@@ -1958,6 +2992,68 @@
             "short_id": "0990d22f"
           },
           "sni": "www.cloudflare.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:bbece16367d0a489c6a10f4b35c6e5a4a1bb04ae02303acba5cb9a58340f7644": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:bbece16367d0a489c6a10f4b35c6e5a4a1bb04ae02303acba5cb9a58340f7644",
+        "operator_scores": {},
+        "port": 23576,
+        "protocol": "vless",
+        "server": "51.158.206.103",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+            "short_id": "01"
+          },
+          "sni": "fuck.rkn"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "/?Telegram---PLANB_NET---PLANB_NET---PLANB_NET---PLANB_NET",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:bd63a69473839d16a636cebfdbbee04750330d1cb39f1813e2a6a18b7b1da3d4": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "e894c08a-fecc-46f5-bf03-c95d0274c79d",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:bd63a69473839d16a636cebfdbbee04750330d1cb39f1813e2a6a18b7b1da3d4",
+        "operator_scores": {},
+        "port": 8443,
+        "protocol": "vless",
+        "server": "48.102.138.175",
+        "source_count": 2,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "25QzRZqG6_xhYTy3Be7EXiE8UgaVyRl_GFx8mfXBLWc",
+            "short_id": "6aee1e2cdc4d33dd"
+          },
+          "sni": "www.google.com"
         },
         "transport": {
           "flow": "xtls-rprx-vision",
@@ -2062,9 +3158,69 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:c32efa27a5f7d603b80015430e652e523dd49b45c682d5dcc824d4732ae96797": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "e894c08a-fecc-46f5-bf03-c95d0274c79d",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:c32efa27a5f7d603b80015430e652e523dd49b45c682d5dcc824d4732ae96797",
+        "operator_scores": {},
+        "port": 8443,
+        "protocol": "vless",
+        "server": "48.102.138.175",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "25QzRZqG6_xhYTy3Be7EXiE8UgaVyRl_GFx8mfXBLWc",
+            "short_id": "6aee1e2cdc4d33dd"
+          },
+          "sni": "www.google.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "/?Telegram---@pirozi_ArGaP---@pirozi_ArGaP---@pirozi_ArGaP---@pirozi_ArGaP",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:c655b0a4d440e5c29c4869c48c6057469d47765a53687c76e0f75381d0d4e105": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "52406fc7-b008-4985-8de1-4bc43b2b873a",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:c655b0a4d440e5c29c4869c48c6057469d47765a53687c76e0f75381d0d4e105",
+        "operator_scores": {},
+        "port": 993,
+        "protocol": "vless",
+        "server": "2001:4188:2:600:10:10:34:36",
+        "source_count": 1,
+        "tls": {
+          "alpn": [
+            "http/1.1"
+          ],
+          "enabled": true,
+          "fingerprint": "chrome",
+          "sni": "hw7.jirjirakirani.com."
+        },
+        "transport": {
+          "path": "/",
+          "type": "ws"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:c7905b0b86f96a10c5779b7cd654ba5ed9fb09aea74b178671d94b16fef619d3": {
       "first_seen": "2026-11-23T12:29:45Z",
-      "last_seen": "2026-11-23T12:29:45Z",
+      "last_seen": "2026-11-26T15:38:19Z",
       "record": {
         "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
         "first_seen": "2026-11-23T12:29:45Z",
@@ -2073,7 +3229,7 @@
         "port": 23576,
         "protocol": "vless",
         "server": "51.158.206.96",
-        "source_count": 1,
+        "source_count": 2,
         "tls": {
           "enabled": true,
           "reality": {
@@ -2115,6 +3271,70 @@
         },
         "transport": {
           "type": "splithttp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:ca5dbc6e9d513040fc85eadc0ee4ebb531c7a2981827e9bcf8e35f86f14a3b00": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "48ff2b70-e180-582f-8866-d9a2edeed5f5",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:ca5dbc6e9d513040fc85eadc0ee4ebb531c7a2981827e9bcf8e35f86f14a3b00",
+        "operator_scores": {},
+        "port": 23576,
+        "protocol": "vless",
+        "server": "51.158.206.34",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "1y5h2FGWKXTJ9xLPCqPo6Mw7RxoZzh6fGkEQKNxpZ3s",
+            "short_id": "01"
+          },
+          "sni": "fuck.rkn"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "/?Telegram---PLANB_NET---PLANB_NET---PLANB_NET---PLANB_NET",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:cbccf332baadf85faf7a4f90b0e36daf4ffd83230d163ea838104a73994d34fc": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "c53ea5e9-ed8b-4990-805d-7f1d6451426c",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:cbccf332baadf85faf7a4f90b0e36daf4ffd83230d163ea838104a73994d34fc",
+        "operator_scores": {},
+        "port": 8443,
+        "protocol": "vless",
+        "server": "92.118.206.218",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "firefox",
+          "reality": {
+            "enabled": true,
+            "public_key": "fSVfR9NB-6J6smrZlavi0GWd8JfDh0aXuEkKbtuFzUI",
+            "short_id": "3cbc3d737fb9c4af"
+          },
+          "sni": "dur.sky-vault.top"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "/?Telegram---PLANB_NET---PLANB_NET---PLANB_NET---PLANB_NET",
+          "type": "tcp"
         }
       },
       "sources": [
@@ -2183,6 +3403,67 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:d85af42a4e8e20b19a2a25ee55cfd3a1d4c502e0775b5a942762974177562a39": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "d65cc14c-f53f-4fe2-b262-97856601319c",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:d85af42a4e8e20b19a2a25ee55cfd3a1d4c502e0775b5a942762974177562a39",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "169.40.42.231",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "e2RLf57Li_-MDZGE9ss1BWPgP54mqRb5PfXhW2jcVVg",
+            "short_id": "c39cc7310a"
+          },
+          "sni": "yahoo.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "/?",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:dd84bfaa9b11d138b36a2a198c33e7b5cc15d7d99598a2dda1f062eba1418973": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "259ec8bc-5a6b-4b33-8a71-c40e8d150c24",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:dd84bfaa9b11d138b36a2a198c33e7b5cc15d7d99598a2dda1f062eba1418973",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "h-pl.ok-habits.xyz",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "fNfokzklCF4l_c8k8PciOCjm5ecNoF_sNLjEtaO-xzI",
+            "short_id": "db04ce8bdb8900f1"
+          },
+          "sni": "1.4.8.8"
+        },
+        "transport": {
+          "host": "/?",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:e4ae0335bb07d13630e5898bf7c62f1cb08691f3766fdc74ed96cce1143aed10": {
       "first_seen": "2026-11-23T12:29:45Z",
       "last_seen": "2026-11-23T12:29:45Z",
@@ -2217,7 +3498,7 @@
     },
     "sha256:e6ccde166803f48e8a35ea92ec3f15b481968f6eca007fbcc9e122bf3191a233": {
       "first_seen": "2026-11-23T12:20:52Z",
-      "last_seen": "2026-11-23T12:29:45Z",
+      "last_seen": "2026-11-26T15:38:19Z",
       "record": {
         "credential": "920b3cd9-4f82-4669-bbd2-d4a28b9052c6",
         "first_seen": "2026-11-23T12:20:52Z",
@@ -2245,6 +3526,35 @@
       },
       "sources": [
         "bootstrap",
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:e765ce5fad0e22ec795b1c7834174bf0c811e832abb20a17392461a9e7e46118": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "53bbdad4-2f4e-45db-8df4-fa491a6a7227",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:e765ce5fad0e22ec795b1c7834174bf0c811e832abb20a17392461a9e7e46118",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "leviko-us4350.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "alpn": [
+            "http/1.1"
+          ],
+          "enabled": true,
+          "sni": "freeceshi6.frii.site"
+        },
+        "transport": {
+          "host": "freeceshi6.frii.site",
+          "path": "/proxyip",
+          "type": "ws"
+        }
+      },
+      "sources": [
         "chillguy_vpn"
       ]
     },
@@ -2312,6 +3622,62 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:eb342a7e5e742f02569ea128342dcab22ebfcee3d20b42f63eb0006e065b8517": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "b6e5dc56-836f-48c1-9163-b0b0b43b647d",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:eb342a7e5e742f02569ea128342dcab22ebfcee3d20b42f63eb0006e065b8517",
+        "operator_scores": {},
+        "port": 14430,
+        "protocol": "vless",
+        "server": "178.172.227.228",
+        "source_count": 1,
+        "tls": {
+          "enabled": false
+        },
+        "transport": {
+          "host": "178.172.227.228",
+          "path": "/vless",
+          "type": "ws"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:ec89f2c0c9c54057d667034c3a3898bb812c9542561402e72bc3a253972ad284": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "2e0697c0-5d99-4502-a001-bb90e6476d2a",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:ec89f2c0c9c54057d667034c3a3898bb812c9542561402e72bc3a253972ad284",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "77.113.33.235",
+        "source_count": 2,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "uKTuTKW9v75dRfEvCTO-VwYKi9qB_qyhNdyOpq4ceEo",
+            "short_id": "cd80d90bee24205f"
+          },
+          "sni": "dl.google.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:ed4dee30e4caf3c7d146939bc20e5f2ecc8003f3817013a63c21e14bb78db05c": {
       "first_seen": "2026-11-23T12:29:45Z",
       "last_seen": "2026-11-23T12:29:45Z",
@@ -2357,6 +3723,150 @@
         "transport": {
           "host": "rma4.rmaaccshop.ir",
           "path": "/rma",
+          "type": "ws"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:eecb184ae84f0e858dae4d8019fbec9105398003103913a316d8b51462dc77e0": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "04812b68-47ad-48ee-b96d-ab9127679634",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:eecb184ae84f0e858dae4d8019fbec9105398003103913a316d8b51462dc77e0",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "147.45.61.144",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "reality": {
+            "enabled": true,
+            "public_key": "tmiOsPsVgiWU7usQWetCpVdEp3ZTWl9tPY-r399JdCs",
+            "short_id": "b725584749527b07"
+          },
+          "sni": "s2.frenchymyrsep.click"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:f13ff9de2dd9aa3fe01e5156a91e1ae2b26d3f56c412833068b03b5b34dcf750": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "12a4f736-2238-49ee-831f-5516f15cc951",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:f13ff9de2dd9aa3fe01e5156a91e1ae2b26d3f56c412833068b03b5b34dcf750",
+        "operator_scores": {},
+        "port": 31001,
+        "protocol": "vless",
+        "server": "2.26.204.46",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "lzpIiMqHXas_qayw-HvrySb78FNkVroBOqniwqPXPzY",
+            "short_id": "39793bc4708abbbb"
+          },
+          "sni": "mensura.cdn-apple.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:f2aa3d56e3e989fa481671988d2c56ecde40cdbb0f3803340a59b72b0f53206f": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "f8c8dc3d-0d37-46b0-8b34-a7232882fcfe",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:f2aa3d56e3e989fa481671988d2c56ecde40cdbb0f3803340a59b72b0f53206f",
+        "operator_scores": {},
+        "port": 18000,
+        "protocol": "vmess",
+        "server": "67.220.95.3",
+        "source_count": 1,
+        "tls": {
+          "enabled": false
+        },
+        "transport": {
+          "host": "67.220.95.3",
+          "path": "/",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:f2e9bf8a13fd41d3877fe608937cedb9e67c5b82f14833215f39341509d3f43c": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "8f704ed6-9a1a-4d04-94dd-1bff501716de",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:f2e9bf8a13fd41d3877fe608937cedb9e67c5b82f14833215f39341509d3f43c",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "leviko-gr9245.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "reality": {
+            "enabled": true,
+            "public_key": "biNcdU5mywtNw-KyPpLHindBxdEyAolT1WJ26N0b7y4",
+            "short_id": "94acb54627612d43"
+          },
+          "sni": "www.cloudflare.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:f467e7430f023441bca830ad37bdc77182fb0cd611299e0485478f6e1ac32858": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "53bbdad4-2f4e-45db-8df4-fa491a6a7227",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:f467e7430f023441bca830ad37bdc77182fb0cd611299e0485478f6e1ac32858",
+        "operator_scores": {},
+        "port": 8443,
+        "protocol": "vless",
+        "server": "leviko-us6278.shopingggg.ir",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "chrome",
+          "sni": "freeceshi6.frii.site"
+        },
+        "transport": {
+          "host": "freeceshi6.frii.site",
+          "path": "/",
           "type": "ws"
         }
       },
@@ -2458,6 +3968,37 @@
         "chillguy_vpn"
       ]
     },
+    "sha256:f8d4958c39f825cbe15a88d39ffa516a60eb81003d42eba0676093efe7eadfd7": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "e894c08a-fecc-46f5-bf03-c95d0274c79d",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:f8d4958c39f825cbe15a88d39ffa516a60eb81003d42eba0676093efe7eadfd7",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "48.102.207.172",
+        "source_count": 2,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "firefox",
+          "reality": {
+            "enabled": true,
+            "public_key": "iZOSshApMLZQ_qeN8ra7h_y9ig2P5yHHiKcN_6kxNmU",
+            "short_id": "3a75d125d1a41392"
+          },
+          "sni": "www.google.com"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
     "sha256:fb6fd82e088bce40ae539f4d742c9036833dc291d10051ba5f93e54a7463a6e1": {
       "first_seen": "2026-11-23T12:20:52Z",
       "last_seen": "2026-11-23T12:29:45Z",
@@ -2481,6 +4022,68 @@
       },
       "sources": [
         "bootstrap",
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:fca38e7fb40de96f14d5e86191e201e54db104d65f1f5b3f7061133ce4105dd2": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "6ab79fec-ca02-447b-b7be-5945f6e6ea8f",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:fca38e7fb40de96f14d5e86191e201e54db104d65f1f5b3f7061133ce4105dd2",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "144.31.90.235",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "firefox",
+          "reality": {
+            "enabled": true,
+            "public_key": "DfbGULX0lQ6_3ZrSW3NBHlh6Bz6ORxonjptCcNObC0w",
+            "short_id": "adff113498e0f7fc"
+          },
+          "sni": "blog-asia.livemusic.ac"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "host": "/?",
+          "type": "tcp"
+        }
+      },
+      "sources": [
+        "chillguy_vpn"
+      ]
+    },
+    "sha256:fdd82c2a19ee015a70a736cddf531b2e0f19aeb32611b11417b91680eb320d7e": {
+      "first_seen": "2026-11-26T15:38:19Z",
+      "last_seen": "2026-11-26T15:38:19Z",
+      "record": {
+        "credential": "639b131f-d0f3-460c-aa17-423047f8a5df",
+        "first_seen": "2026-11-26T15:38:19Z",
+        "id": "sha256:fdd82c2a19ee015a70a736cddf531b2e0f19aeb32611b11417b91680eb320d7e",
+        "operator_scores": {},
+        "port": 443,
+        "protocol": "vless",
+        "server": "147.45.45.194",
+        "source_count": 1,
+        "tls": {
+          "enabled": true,
+          "fingerprint": "firefox",
+          "reality": {
+            "enabled": true,
+            "public_key": "-P8DgKISSG4jnLuj6ihZDqZs1_zt-juBrhVhTylHiAo"
+          },
+          "sni": "finb2.mcufa.pro"
+        },
+        "transport": {
+          "flow": "xtls-rprx-vision",
+          "type": "tcp"
+        }
+      },
+      "sources": [
         "chillguy_vpn"
       ]
     }
